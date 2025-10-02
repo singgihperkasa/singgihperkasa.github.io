@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Website Singgih Perkasa</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+      color: #333;
+    }
+    header {
+      background-color: #4a90e2;
+      color: white;
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      flex-wrap: wrap;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+    nav a {
+      color: white;
+      margin-left: 1rem;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    main {
+      padding: 2rem;
+      text-align: center;
+    }
+    img {
+      max-width: 80%;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      margin: 1rem 0;
+    }
+    button {
+      padding: 0.7rem 1.5rem;
+      background-color: #4a90e2;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background-color: #357ab7;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      color: #555;
+      background: #e0e7ef;
+    }
+    @media(max-width:600px){
+      header {
+        flex-direction: column;
+        text-align: center;
+      }
+      nav a {
+        margin: 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Singgih Perkasa</h1>
+  <nav>
+    <a href="#home">Home</a>
+    <a href="#foto">Foto</a>
+    <a href="#about">Tentang</a>
+  </nav>
+</header>
+
+<main>
+  <section id="home">
+    <h2>Halo Dunia! 👋</h2>
+    <p>Website pertama saya, dibuat langsung dari Android + Termux + GitHub Pages.</p>
+    <button onclick="alert('Terima kasih sudah berkunjung!')">Klik Saya 🚀</button>
+  </section>
+
+  <section id="foto">
+    <h2>Foto Terbaru</h2>
+    <img src="singabulan.png" alt="Foto Singa Bulan">
+  </section>
+
+  <section id="about">
+    <h2>Tentang Saya</h2>
+    <p>Saya sedang belajar membuat website interaktif menggunakan HTML, CSS, dan GitHub Pages langsung dari Android.</p>
+  </section>
+</main>
+
+<footer>
+  &copy; 2025 Singgih Perkasa | Dibuat dengan ❤️ menggunakan GitHub Pages
+</footer>
+
+</body>
+</html>
