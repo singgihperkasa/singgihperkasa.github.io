@@ -1,40 +1,79 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Website Singgih Perkasa</title>
+  <title>Halaman Utama</title>
   <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
-      color: #333;
+    body { font-family: Arial, sans-serif; margin:0; padding:0;}
+    .banner {
+      background: url('banner.jpg') no-repeat center center;
+      background-size: cover;
+      height: 250px;
+      position: relative;
     }
-    header {
-      background-color: #4a90e2;
-      color: white;
-      padding: 1.5rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      flex-wrap: wrap;
+    .profile-photo {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      position: absolute;
+      left: 30px;
+      bottom: -60px;
+      border: 5px solid white;
+      background: #eee;
     }
-    header h1 {
-      margin: 0;
-      font-size: 2rem;
+    .container { padding: 90px 20px 20px 20px; }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 30px;
     }
-    nav a {
-      color: white;
-      margin-left: 1rem;
-      text-decoration: none;
-      font-weight: bold;
-      transition: 0.3s;
+    .gallery img {
+      width: 100%;
+      border-radius: 8px;
+      object-fit: cover;
+      height: 150px;
     }
-    nav a:hover {
-      text-decoration: underline;
+    .comment-section {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: #fafafa;
     }
+    .comment-section h3 { margin-top: 0;}
+    .comment-section input, .comment-section textarea {
+      width: 100%; margin-bottom:8px; padding:8px; border-radius:5px; border:1px solid #ccc;
+    }
+    .comment-section button {
+      background: #1877F2; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="banner">
+    <img src="profile.jpg" alt="Foto Profil" class="profile-photo">
+  </div>
+  <div class="container">
+    <h2>Galeri Foto (Style Instagram)</h2>
+    <div class="gallery">
+      <img src="foto1.jpg" alt="Foto 1">
+      <img src="foto2.jpg" alt="Foto 2">
+      <img src="foto3.jpg" alt="Foto 3">
+      <!-- Tambahkan lagi sesuai kebutuhan -->
+    </div>
+    <div class="comment-section">
+      <h3>Komentar</h3>
+      <form>
+        <input type="text" placeholder="Nama Anda" required>
+        <textarea rows="3" placeholder="Tulis komentar..." required></textarea>
+        <button type="submit">Kirim Komentar</button>
+      </form>
+      <!-- Komentar tampil di sini (fitur lanjut dengan JS atau layanan eksternal) -->
+    </div>
+  </div>
+</body>
+</html>    }
     main {
       padding: 2rem;
       text-align: center;
