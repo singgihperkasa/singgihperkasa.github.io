@@ -3,126 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Warung Kopi Singgih</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Undangan Singgih & Pasangan</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@500&display=swap" rel="stylesheet">
 </head>
-<body class="bg-white text-gray-800">
-  <!-- Header -->
-  <header class="sticky top-0 bg-white shadow z-50">
-    <div class="max-w-6xl mx-auto flex items-center justify-between p-4">
-      <div class="flex items-center gap-2 font-bold text-lg">
-        <span class="bg-yellow-600 text-white px-2 py-1 rounded">WS</span>
-        <span>Warung Kopi Singgih</span>
-      </div>
-      <nav class="hidden md:flex gap-6 text-sm">
-        <a href="#layanan" class="hover:text-yellow-600">Layanan</a>
-        <a href="#galeri" class="hover:text-yellow-600">Galeri</a>
-        <a href="#harga" class="hover:text-yellow-600">Harga</a>
-        <a href="#kontak" class="hover:text-yellow-600">Kontak</a>
-      </nav>
-      <a href="#kontak" class="bg-yellow-600 text-white px-4 py-2 rounded">Order Sekarang</a>
-    </div>
+<body>
+  <!-- Musik otomatis -->
+  <audio id="bg-music" autoplay loop>
+    <source src="music.mp3" type="audio/mpeg">
+    Browser Anda tidak mendukung pemutar audio.
+  </audio>
+
+  <header>
+    <h1>Undangan Pernikahan</h1>
   </header>
 
-  <!-- Hero -->
-  <section class="bg-gray-50">
-    <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 p-8 md:py-16 items-center">
-      <div>
-        <span class="inline-block bg-yellow-100 text-yellow-700 px-3 py-1 rounded mb-4 text-sm">Kopi enak, suasana nyaman.</span>
-        <h1 class="text-4xl font-extrabold leading-tight">Nikmati <span class="text-yellow-600">Kopi Spesial</span> di Warung Kopi Singgih</h1>
-        <p class="mt-4 text-gray-600">Tempat nongkrong asik dengan kopi pilihan dan pastry segar.</p>
-        <div class="mt-6 flex gap-3">
-          <a href="#harga" class="bg-yellow-600 text-white px-5 py-3 rounded">Lihat Menu</a>
-          <a href="#kontak" class="border px-5 py-3 rounded">Hubungi Kami</a>
-        </div>
-      </div>
-      <div>
-        <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?q=80&w=1600&auto=format&fit=crop" class="rounded-xl shadow" alt="Kopi">
-      </div>
+  <main class="container">
+    <div class="text">
+      <h2 class="nama">Singgih &amp; N</h2>
+      <p class="ayat">"Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan untukmu pasangan-pasangan dari jenismu sendiri..." <br> (QS. Ar-Rum: 21)</p>
+      <p class="detail">Dengan penuh rasa syukur, kami mengundang Bapak/Ibu/Saudara/i untuk hadir dalam acara pernikahan kami.</p>
+      <p class="tanggal">📅 Minggu, 26 Oktober 2025<br>🏠 Cikarang, Jawa Barat</p>
     </div>
-  </section>
-
-  <!-- Layanan -->
-  <section id="layanan" class="py-16">
-    <div class="max-w-6xl mx-auto text-center">
-      <h2 class="text-3xl font-bold">Layanan Kami</h2>
-      <p class="text-gray-600 mt-2">Pilihan terbaik untuk pecinta kopi.</p>
-      <div class="grid md:grid-cols-3 gap-6 mt-10">
-        <div class="p-6 border rounded-xl">
-          <h3 class="font-semibold mb-2">Kopi Spesial</h3>
-          <p class="text-gray-600 text-sm">Espresso, cappuccino, latte, dan manual brew.</p>
-        </div>
-        <div class="p-6 border rounded-xl">
-          <h3 class="font-semibold mb-2">Snack & Pastry</h3>
-          <p class="text-gray-600 text-sm">Roti, kue, dan camilan pendamping kopi.</p>
-        </div>
-        <div class="p-6 border rounded-xl">
-          <h3 class="font-semibold mb-2">Paket Acara</h3>
-          <p class="text-gray-600 text-sm">Pesanan khusus untuk meeting atau gathering.</p>
-        </div>
-      </div>
+    <div class="photo">
+      <img src="images/dsc02065.jpg" alt="Foto Pengantin">
     </div>
-  </section>
+  </main>
 
-  <!-- Galeri -->
-  <section id="galeri" class="py-16 bg-gray-50">
-    <div class="max-w-6xl mx-auto text-center">
-      <h2 class="text-3xl font-bold">Galeri</h2>
-      <p class="text-gray-600 mt-2">Suasana dan menu di Warung Kopi Singgih.</p>
-      <div class="grid md:grid-cols-3 gap-6 mt-10">
-        <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?q=80&w=1200&auto=format&fit=crop" class="rounded-xl shadow" alt="Interior">
-        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=1200&auto=format&fit=crop" class="rounded-xl shadow" alt="Pastry">
-        <img src="https://images.unsplash.com/photo-1498804103079-a6351b050096?q=80&w=1200&auto=format&fit=crop" class="rounded-xl shadow" alt="Coffee">
-      </div>
-    </div>
-  </section>
-
-  <!-- Harga -->
-  <section id="harga" class="py-16">
-    <div class="max-w-6xl mx-auto text-center">
-      <h2 class="text-3xl font-bold">Menu & Harga</h2>
-      <div class="grid md:grid-cols-3 gap-6 mt-10">
-        <div class="p-6 border rounded-xl">
-          <h3 class="font-semibold">Espresso</h3>
-          <p class="text-2xl font-bold">Rp15.000</p>
-          <p class="text-sm text-gray-600 mt-2">Shot kopi pekat khas Italia.</p>
-        </div>
-        <div class="p-6 border-2 border-yellow-600 rounded-xl">
-          <h3 class="font-semibold">Latte</h3>
-          <p class="text-2xl font-bold">Rp25.000</p>
-          <p class="text-sm text-gray-600 mt-2">Perpaduan espresso dan susu lembut.</p>
-        </div>
-        <div class="p-6 border rounded-xl">
-          <h3 class="font-semibold">Paket Rombongan</h3>
-          <p class="text-2xl font-bold">Mulai Rp300.000</p>
-          <p class="text-sm text-gray-600 mt-2">Kopi & snack untuk acara spesial.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Kontak -->
-  <section id="kontak" class="py-16 bg-gray-50">
-    <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
-      <div>
-        <h2 class="text-3xl font-bold">Hubungi Kami</h2>
-        <p class="text-gray-600 mt-2">Reservasi, pesanan, atau pertanyaan bisa lewat kontak berikut.</p>
-        <p class="mt-4">📞 <a href="https://wa.me/6285693771959" class="text-green-600 hover:underline">+62 812-3456-7890</a></p>
-        <p>📧 halo@singgih.id</p>
-        <p>📍 Jl. Melati No.12, Jakarta</p>
-      </div>
-      <form class="space-y-3">
-        <input type="text" placeholder="Nama lengkap" class="w-full border p-3 rounded" required>
-        <input type="email" placeholder="Email" class="w-full border p-3 rounded" required>
-        <textarea rows="4" placeholder="Pesan" class="w-full border p-3 rounded" required></textarea>
-        <button type="submit" class="bg-yellow-600 text-white px-4 py-2 rounded w-full">Kirim</button>
-      </form>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="border-t py-6 text-center text-sm text-gray-500">
-    © 2025 Warung Kopi Singgih. Semua hak cipta.
+  <footer>
+    <p>Terima kasih atas doa restu Anda 🙏</p>
+    <p>&copy; 2025 Singgih & N</p>
   </footer>
 </body>
 </html>
