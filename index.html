@@ -10,7 +10,7 @@
 <body>
   <!-- Musik otomatis -->
   <audio id="bg-music" autoplay loop>
-    <source src="music.mp3" type="audio/mpeg">
+    <source src="musik.mp3" type="audio/mpeg">
     Browser Anda tidak mendukung pemutar audio.
   </audio>
 
@@ -34,5 +34,47 @@
     <p>Terima kasih atas doa restu Anda 🙏</p>
     <p>&copy; 2025 Singgih & N</p>
   </footer>
-</body>
+</body><!-- Banner -->
+<div class="banner">
+  <img src="IMG_20251002_234027.jpg" alt="Banner Website">
+  <div class="banner-text">
+    <h1>Selamat Datang di Website Saya</h1>
+    <p>Mari jelajahi galeri dan informasi di sini</p>
+  </div>
+</div>
+
+<style>
+  .banner {
+    position: relative;
+    width: 100%;
+    height: 33vh; /* sepertiga layar */
+    overflow: hidden;
+  }
+
+  .banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* supaya proporsional */
+  }
+
+  .banner-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    text-align: center;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.7);
+  }
+
+  .banner-text h1 {
+    font-size: 2em;
+    margin: 0;
+  }
+
+  .banner-text p {
+    font-size: 1.2em;
+  }
+    </style>
+  <body>
 </html>
