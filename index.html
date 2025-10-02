@@ -5,10 +5,16 @@
   <style>
     body { font-family: Arial, sans-serif; margin:0; padding:0;}
     .banner {
-      background: url('banner.jpg') no-repeat center center;
-      background-size: cover;
-      height: 250px;
+      width: 100vw;
+      height: 320px;
+      overflow: hidden;
       position: relative;
+    }
+    .banner img {
+      width: 100vw;
+      height: 320px;
+      object-fit: cover;
+      display: block;
     }
     .profile-photo {
       width: 120px;
@@ -52,6 +58,7 @@
 </head>
 <body>
   <div class="banner">
+    <img src="Screenshot_2025-09-03-17-59-13-671_com.miui.gallery.jpg" alt="Banner">
     <img src="Foto.jpg" alt="Foto Profil" class="profile-photo">
   </div>
   <div class="container">
