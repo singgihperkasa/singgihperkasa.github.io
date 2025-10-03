@@ -1,130 +1,101 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lowongan & Rumah Subsidi</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin:20px; background:#f5f5f5; }
-    .card { background:#fff; padding:15px; margin:10px 0; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.1);}
-    .hidden { display:none; }
-    button { margin:5px; padding:8px 12px; border:none; border-radius:5px; cursor:pointer; }
-    .btn-primary { background:#007bff; color:#fff; }
-    .btn-danger { background:#dc3545; color:#fff; }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Perumahan Subsidi & Komersil - Direktori Sales</title>
+<style>
+  body{font-family:Arial,sans-serif;background:#f4f6f8;margin:0;color:#222}
+  header{background:#0b5ed7;color:#fff;padding:18px;text-align:center}
+  .container{max-width:1000px;margin:18px auto;padding:12px}
+  .search{display:flex;gap:8px;margin-bottom:12px}
+  input[type=text]{flex:1;padding:10px;border-radius:6px;border:1px solid #cfd8e3}
+  button{padding:10px 12px;border-radius:6px;border:none;background:#0b5ed7;color:#fff;cursor:pointer}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+  .card{background:#fff;border-radius:8px;padding:12px;box-shadow:0 2px 6px rgba(12,38,63,0.08);display:flex;gap:12px;align-items:center}
+  .thumb{width:72px;height:72px;border-radius:8px;overflow:hidden;flex:0 0 72px}
+  .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .info{flex:1}
+  .info h3{margin:0;font-size:16px}
+  .info p{margin:6px 0;color:#555;font-size:14px}
+  .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+  .actions a{padding:8px 10px;background:#198754;color:#fff;border-radius:6px;text-decoration:none;font-size:14px}
+  .note{font-size:13px;color:#666;margin-top:12px}
+  footer{text-align:center;padding:14px;color:#666;font-size:14px}
+</style>
 </head>
 <body>
-  <h2>🔍 Cari Lowongan Kerja</h2>
-  <input type="text" id="jobSearch" placeholder="Cari lowongan...">
-  <button class="btn-primary" onclick="searchJob()">Cari</button>
-  <div>
-    <button onclick="searchJob('Analis Kimia')">Analis Kimia</button>
-    <button onclick="searchJob('QC')">QC</button>
-    <button onclick="searchJob('RnD')">RnD</button>
-    <button onclick="searchJob('Farmasi')">Farmasi</button>
-  </div>
-  <hr>
+<header>
+  <h1>Perumahan Subsidi & Komersil - Direktori Sales</h1>
+  <div style="font-size:14px;opacity:0.9">Klik nomor untuk chat WA. Thumbnail dibuat otomatis (identicon) untuk privasi.</div>
+</header>
 
-  <h2>🏠 Rumah Subsidi</h2>
-  <div id="rumahList"></div>
-
-  <div id="adminPanel" class="hidden">
-    <h3>Tambah Rumah</h3>
-    <input type="text" id="namaRumah" placeholder="Nama rumah"><br>
-    <input type="text" id="lokasiRumah" placeholder="Lokasi"><br>
-    <input type="text" id="salesRumah" placeholder="Nomor Sales"><br>
-    <button class="btn-primary" onclick="tambahRumah()">Tambah</button>
+<div class="container">
+  <div class="search">
+    <input type="text" id="q" placeholder="Cari nomor sales / masukkan kode (contoh: 877-7540)">
+    <button onclick="doFilter()">Cari</button>
+    <button onclick="resetFilter()" style="background:#6c757d">Reset</button>
   </div>
 
-  <div id="authPanel">
-    <h3>Login Admin</h3>
-    <input type="email" id="email" placeholder="Email"><br>
-    <input type="password" id="password" placeholder="Password"><br>
-    <button class="btn-primary" onclick="login()">Login</button>
-    <button class="btn-danger hidden" id="logoutBtn" onclick="logout()">Logout</button>
-  </div>
+  <div id="grid" class="grid"></div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  <div class="note">Catatan: Thumbnail dihasilkan otomatis dari layanan avatar (DiceBear). Jika ingin foto asli, upload manual untuk tiap sales.</div>
+</div>
 
-    // ✅ Config Firebase
-    const firebaseConfig = {
-      apiKey: "AIzaSyD3X7k1IzdzuU3cEW38icUG3FdugQXfLYg",
-      authDomain: "add-firebase-to-web.firebaseapp.com",
-      projectId: "add-firebase-to-web",
-      storageBucket: "add-firebase-to-web.firebasestorage.app",
-      messagingSenderId: "301093491267",
-      appId: "1:301093491267:web:80194bccc4268efa88faf6",
-      measurementId: "G-K1SV7JDJ9G"
-    };
+<footer>© Portal Perumahan</footer>
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+<script>
+const salesData = [
+  {"phone":"+62 877-7540-4939","wa":"https://wa.me/6287775404939","name":"Sales A"},
+  {"phone":"+62 821-1286-3476","wa":"https://wa.me/6282112863476","name":"Sales B"},
+  {"phone":"wa_channel_6281218001342","wa":"https://wa.me/c/6281218001342","name":"Sales C"},
+  {"phone":"+62 813-8017-5975","wa":"https://wa.me/6281380175975","name":"Sales D"},
+  {"phone":"wa_channel_6289606275067","wa":"https://wa.me/c/6289606275067","name":"Sales E"},
+  {"phone":"wa_channel_6281262853292","wa":"https://wa.me/c/6281262853292","name":"Sales F"},
+  {"phone":"+62 812-1203-2885","wa":"https://wa.me/6281212032885","name":"Sales G"},
+  {"phone":"wa_channel_6281383663810","wa":"https://wa.me/c/6281383663810","name":"Sales H"},
+  {"phone":"wa_channel_6281111812711","wa":"https://wa.me/c/6281111812711","name":"Sales I"},
+  {"phone":"+62 815-1000-3493","wa":"https://wa.me/6281510003493","name":"Sales J"},
+  {"phone":"wa_channel_6281328293060","wa":"https://wa.me/c/6281328293060","name":"Sales K"},
+  {"phone":"wa_channel_628977296502","wa":"https://wa.me/c/628977296502","name":"Sales L"}
+];
 
-    const rumahList = document.getElementById("rumahList");
-    const adminPanel = document.getElementById("adminPanel");
-    const logoutBtn = document.getElementById("logoutBtn");
+function avatarUrl(seed){
+  const s = encodeURIComponent(seed.replace(/\s+/g,''));
+  return `https://avatars.dicebear.com/api/identicon/${s}.svg`;
+}
 
-    async function loadRumah() {
-      rumahList.innerHTML = "";
-      const querySnapshot = await getDocs(collection(db, "rumah"));
-      querySnapshot.forEach((docSnap) => {
-        const data = docSnap.data();
-        const div = document.createElement("div");
-        div.className = "card";
-        div.innerHTML = `<b>${data.nama}</b><br>${data.lokasi}<br>Sales: ${data.sales}
-          <button class="btn-danger hidden" onclick="hapusRumah('${docSnap.id}')">Hapus</button>`;
-        rumahList.appendChild(div);
-      });
-    }
-    loadRumah();
+function render(list){
+  const grid = document.getElementById('grid');
+  grid.innerHTML='';
+  list.forEach(item=>{
+    const div = document.createElement('div');
+    div.className='card';
+    div.innerHTML = `
+      <div class="thumb"><img src="${avatarUrl(item.phone)}" alt="thumb"></div>
+      <div class="info">
+        <h3>${item.name}</h3>
+        <p>Nomor: ${item.phone}</p>
+        <div class="actions">
+          <a href="${item.wa}" target="_blank">Chat WA</a>
+          <a href="tel:${item.wa.includes('wa.me/c')?''+'' : item.wa.replace('https://wa.me/','')}" style="background:#0d6efd">Panggil</a>
+        </div>
+      </div>
+    `;
+    grid.appendChild(div);
+  });
+}
 
-    window.tambahRumah = async function() {
-      const nama = document.getElementById("namaRumah").value;
-      const lokasi = document.getElementById("lokasiRumah").value;
-      const sales = document.getElementById("salesRumah").value;
-      await addDoc(collection(db, "rumah"), { nama, lokasi, sales });
-      loadRumah();
-    }
+function doFilter(){
+  const q = document.getElementById('q').value.trim().toLowerCase();
+  if(!q){ render(salesData); return; }
+  const filtered = salesData.filter(s=> s.phone.toLowerCase().includes(q) || s.name.toLowerCase().includes(q));
+  render(filtered);
+}
 
-    window.hapusRumah = async function(id) {
-      await deleteDoc(doc(db, "rumah", id));
-      loadRumah();
-    }
+function resetFilter(){ document.getElementById('q').value=''; render(salesData); }
 
-    window.login = function() {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      signInWithEmailAndPassword(auth, email, password)
-        .then(() => { alert("Login sukses"); })
-        .catch(err => alert("Login gagal: " + err.message));
-    }
-
-    window.logout = function() {
-      signOut(auth);
-    }
-
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        adminPanel.classList.remove("hidden");
-        logoutBtn.classList.remove("hidden");
-        document.querySelectorAll(".btn-danger").forEach(btn => btn.classList.remove("hidden"));
-      } else {
-        adminPanel.classList.add("hidden");
-        logoutBtn.classList.add("hidden");
-        document.querySelectorAll(".btn-danger").forEach(btn => btn.classList.add("hidden"));
-      }
-    });
-
-    window.searchJob = function(keyword) {
-      const q = keyword || document.getElementById("jobSearch").value;
-      if (q) {
-        window.open("https://www.jobstreet.co.id/id/job-search/" + encodeURIComponent(q) + "-jobs/", "_blank");
-      }
-    }
-  </script>
+render(salesData);
+</script>
 </body>
 </html>
