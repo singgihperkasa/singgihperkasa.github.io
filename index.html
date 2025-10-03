@@ -1,245 +1,75 @@
-<!--
-Personal Utility Website - Single-file static site
-Purpose: A compact GitHub Pages-friendly personal dashboard that is useful offline and on mobile.
-Features:
-- Right-side profile/photo uploader (saves to localStorage)
-- Quick Links (editable)
-- Notes (localStorage)
-- To‑Do list (localStorage, complete/delete)
-- Simple Budget tracker (income/expense, shows remaining)
-- Recent activity log (localStorage)
-- Mobile-first responsive layout
-
-Deployment: Save this file as index.html at the root of a repo named <your-username>.github.io and push to GitHub.
-
--->
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Dashboard — Personal Utility</title>
+  <title>Portal Kerja & Rumah Subsidi</title>
   <style>
-    :root{--bg:#0f1724;--card:#0b1220;--muted:#94a3b8;--accent:#06b6d4;--glass:rgba(255,255,255,0.03)}
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial; background:linear-gradient(180deg,#071029 0%, #071827 100%);color:#e6eef6;min-height:100vh}
-    .container{max-width:1100px;margin:18px auto;padding:16px}
-    header{display:flex;gap:12px;align-items:center;margin-bottom:16px}
-    .brand{display:flex;flex-direction:column}
-    h1{margin:0;font-size:20px}
-    .muted{color:var(--muted);font-size:13px}
-    .layout{display:grid;grid-template-columns:1fr 340px;gap:14px}
-    @media (max-width:900px){.layout{grid-template-columns:1fr}}
-    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;padding:12px;box-shadow:0 6px 18px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.03)}
-    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    input,textarea,button,select{font:inherit;color:inherit}
-    .quicklinks a{display:inline-block;margin:6px 6px 6px 0;padding:8px 10px;border-radius:8px;background:var(--glass);text-decoration:none;color:inherit;font-size:14px}
-    .notes textarea{width:100%;min-height:120px;border-radius:8px;padding:10px;border:1px dashed rgba(255,255,255,0.03);background:transparent;color:inherit}
-    .todo-list{list-style:none;padding:0;margin:0}
-    .todo-item{display:flex;align-items:center;gap:8px;padding:8px;border-radius:8px;margin-bottom:8px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent)}
-    .small{font-size:13px}
-    .right-panel{position:sticky;top:18px}
-    .profile{display:flex;align-items:center;gap:12px}
-    .avatar{width:88px;height:88px;border-radius:12px;background:linear-gradient(135deg,#0b2540,#0b1830);display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--muted);overflow:hidden}
-    .btn{padding:8px 12px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--accent),#60a5fa);color:#042027;cursor:pointer}
-    .ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:8px;border-radius:8px}
-    .budget-row{display:flex;gap:8px}
-    .log{max-height:140px;overflow:auto;padding-right:6px}
-    footer{margin-top:14px;color:var(--muted);font-size:13px}
+    body { font-family: Arial, sans-serif; background:#f5f6fa; margin:0; padding:0;}
+    header { background:#2d3436; color:white; padding:18px; text-align:center;}
+    .container { max-width:1000px; margin:18px auto; padding:12px;}
+    button { padding:8px 14px; margin:6px; border:none; border-radius:6px; cursor:pointer; background:#0984e3; color:white;}
+    input { padding:8px; margin:6px 0; width:100%; box-sizing:border-box; }
+    .job-card { background:white; padding:12px; border-radius:8px; margin:10px 0; box-shadow:0 2px 6px rgba(0,0,0,0.08); }
+    table { width:100%; border-collapse:collapse; margin-top:12px; }
+    th, td { padding:8px; border:1px solid #ddd; text-align:left; }
+    th { background:#dfe6e9; }
+    footer { padding:12px; background:#dfe6e9; text-align:center; margin-top:18px; }
+    .hidden { display:none; }
   </style>
 </head>
 <body>
+  <header>
+    <h1>Portal Lowongan Kerja & Rumah Subsidi</h1>
+    <p>🔎 Cari kerja & 🏠 Data rumah subsidi</p>
+  </header>
+
   <div class="container">
-    <header>
-      <div class="brand">
-        <h1>Dashboard Pribadi</h1>
-        <div class="muted">Alat cepat: catatan, todo, anggaran, foto profil — semua disimpan lokal</div>
-      </div>
-    </header>
-
-    <div class="layout">
-      <main>
-        <section class="card">
-          <h3>Quick Links</h3>
-          <div class="quicklinks small" id="quicklinks"></div>
-          <div style="margin-top:10px;display:flex;gap:8px">
-            <input id="qlTitle" placeholder="Judul link" class="ghost" style="flex:1" />
-            <input id="qlUrl" placeholder="https://..." class="ghost" style="flex:2" />
-            <button class="btn" id="addLink">Add</button>
-          </div>
-        </section>
-
-        <section class="card" style="margin-top:12px">
-          <h3>Notes</h3>
-          <div class="notes">
-            <textarea id="notesArea" placeholder="Tulis catatan penting di sini..." spellcheck="false"></textarea>
-            <div style="display:flex;justify-content:space-between;margin-top:8px;align-items:center">
-              <div class="small muted">Auto-saved ke browser</div>
-              <div>
-                <button id="exportNotes" class="ghost">Export</button>
-                <button id="clearNotes" class="ghost">Clear</button>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <div class="grid2" style="margin-top:12px">
-          <section class="card">
-            <h3>To‑Do</h3>
-            <div style="display:flex;gap:8px">
-              <input id="todoTxt" placeholder="Baru: belanja, coding, panggil bapak" class="ghost" style="flex:1" />
-              <button id="addTodo" class="btn">Add</button>
-            </div>
-            <ul class="todo-list" id="todoList" style="margin-top:10px"></ul>
-          </section>
-
-          <section class="card">
-            <h3>Budget Sederhana</h3>
-            <div class="budget-row" style="margin-bottom:8px">
-              <input id="income" type="number" placeholder="Pemasukan" class="ghost" />
-              <input id="expense" type="number" placeholder="Pengeluaran" class="ghost" />
-            </div>
-            <div style="display:flex;gap:8px">
-              <button id="applyBudget" class="btn">Hitung</button>
-              <button id="resetBudget" class="ghost">Reset</button>
-            </div>
-            <div style="margin-top:10px">
-              <div class="small">Sisa: <span id="budgetRemaining">-</span></div>
-            </div>
-          </section>
-        </div>
-
-        <section class="card" style="margin-top:12px">
-          <h3>Activity Log</h3>
-          <div class="log" id="activityLog"></div>
-          <div style="margin-top:8px;display:flex;justify-content:flex-end">
-            <button id="clearLog" class="ghost">Clear log</button>
-          </div>
-        </section>
-      </main>
-
-      <aside class="right-panel">
-        <section class="card profile">
-          <div>
-            <div class="avatar" id="avatar">Foto</div>
-          </div>
-          <div style="flex:1">
-            <div style="display:flex;align-items:center;justify-content:space-between">
-              <div>
-                <div id="displayName" style="font-weight:600">Nama Anda</div>
-                <div class="muted small">Selamat datang — sesuaikan profil</div>
-              </div>
-            </div>
-            <div style="margin-top:10px;display:flex;gap:8px">
-              <input id="nameInput" class="ghost" placeholder="Ganti nama" />
-              <input id="imgInput" type="file" accept="image/*" class="ghost" />
-            </div>
-          </div>
-        </section>
-
-        <section class="card" style="margin-top:12px">
-          <h3>Petunjuk Cepat</h3>
-          <ol class="small muted">
-            <li>Semua data tersimpan lokal di browser (localStorage).</li>
-            <li>Untuk backup: gunakan tombol Export di setiap bagian atau salin dari Inspect &gt; Application &gt; Local Storage.</li>
-            <li>Untuk pasang di GitHub Pages: upload file ini sebagai index.html ke repo <code>username.github.io</code>.</li>
-          </ol>
-        </section>
-
-        <section class="card" style="margin-top:12px">
-          <h3>Preferensi</h3>
-          <div style="display:flex;gap:8px">
-            <button id="darkToggle" class="ghost">Toggle Theme</button>
-            <button id="clearAll" class="ghost">Hapus Semua</button>
-          </div>
-        </section>
-      </aside>
+    <h2>Lowongan Kerja</h2>
+    <input id="keyword" placeholder="Masukkan kata kunci (contoh: analis kimia, qc, farmasi)" />
+    <button onclick="searchJob('linkedin')">LinkedIn</button>
+    <button onclick="searchJob('jobstreet')">JobStreet</button>
+    <button onclick="searchJob('jobsdb')">JobsDB</button>
+    <button onclick="searchJob('glints')">Glints</button>
+    <button onclick="searchJob('google')">Google Jobs</button>
+    <h3>Kategori Cepat</h3>
+    <button onclick="loadJobs('analis+kimia')">Analis Kimia</button>
+    <button onclick="loadJobs('quality+control')">QC</button>
+    <button onclick="loadJobs('research+and+development')">R&D</button>
+    <button onclick="loadJobs('farmasi')">Farmasi</button>
+    <div id="job-list">Pilih kategori untuk lihat lowongan...</div>
+    <hr>
+    <h2>Login Admin</h2>
+    <div id="loginBox" class="job-card">
+      <input id="loginEmail" placeholder="Email admin" />
+      <input id="loginPass" type="password" placeholder="Password" />
+      <button onclick="login()">Login</button>
+      <button onclick="logout()">Logout</button>
+      <p id="loginStatus"></p>
     </div>
-
-    <footer class="muted">Created for you — simpan file ini sebagai <strong>index.html</strong> untuk langsung dipakai di GitHub Pages.</footer>
+    <div id="adminBox" class="job-card hidden">
+      <h3>Tambah Rumah Subsidi</h3>
+      <input id="formSales" placeholder="Nomor Sales (misal S001)" />
+      <input id="formNama" placeholder="Nama Perumahan" />
+      <input id="formLokasi" placeholder="Lokasi" />
+      <input id="formHarga" placeholder="Harga" />
+      <button onclick="addRumah()">Simpan</button>
+      <span id="statusMsg"></span>
+    </div>
+    <h2>Data Rumah Subsidi</h2>
+    <div class="job-card">
+      <h4>Cari Rumah Berdasarkan Nomor Sales</h4>
+      <input id="salesIdSearch" placeholder="Cari nomor sales..." />
+      <button onclick="searchRumah()">Cari</button>
+      <button onclick="loadAllRumah()">Tampilkan Semua</button>
+    </div>
+    <table id="rumahTable">
+      <thead>
+        <tr><th>Sales</th><th>Nama</th><th>Lokasi</th><th>Harga</th><th>Aksi</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
   </div>
-
-<script>
-(function(){
-  // helpers
-  const q = id=>document.getElementById(id);
-  const logAction = (t)=>{
-    const log = JSON.parse(localStorage.getItem('pu_log')||'[]');
-    log.unshift({t,ts:new Date().toISOString()});
-    if(log.length>200) log.pop();
-    localStorage.setItem('pu_log',JSON.stringify(log));
-    renderLog();
-  }
-  function renderLog(){
-    const el = q('activityLog');
-    const log = JSON.parse(localStorage.getItem('pu_log')||'[]');
-    el.innerHTML = log.map(x=>`<div style="padding:6px;border-bottom:1px dashed rgba(255,255,255,0.02)"><div style="font-size:13px">${x.t}</div><div class="muted small">${new Date(x.ts).toLocaleString()}</div></div>`).join('') || '<div class="muted small">Belum ada aktivitas</div>';
-  }
-
-  // Quick links
-  function renderLinks(){
-    const links = JSON.parse(localStorage.getItem('pu_links')||'[]');
-    const el = q('quicklinks');
-    el.innerHTML = links.map((l,i)=>`<a href="${l.url}" target="_blank">${l.title}</a><button data-i="${i}" class="ghost" style="margin-left:6px">x</button>`).join('');
-    Array.from(el.querySelectorAll('button')).forEach(b=>b.addEventListener('click',e=>{
-      const i = +b.dataset.i; links.splice(i,1); localStorage.setItem('pu_links',JSON.stringify(links)); renderLinks(); logAction('Hapus quicklink');
-    }))
-  }
-  q('addLink').addEventListener('click',()=>{
-    const t = q('qlTitle').value.trim(); const u = q('qlUrl').value.trim(); if(!t||!u) return alert('Isi judul dan url');
-    const links = JSON.parse(localStorage.getItem('pu_links')||'[]'); links.push({title:t,url:u}); localStorage.setItem('pu_links',JSON.stringify(links)); q('qlTitle').value=''; q('qlUrl').value=''; renderLinks(); logAction('Tambah quicklink '+t);
-  })
-
-  // Notes
-  q('notesArea').addEventListener('input',()=>{
-    localStorage.setItem('pu_notes', q('notesArea').value);
-    logAction('Update notes');
-  })
-  q('exportNotes').addEventListener('click',()=>{
-    const data = q('notesArea').value; const blob = new Blob([data],{type:'text/plain'}); const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href=url; a.download='notes.txt'; a.click(); URL.revokeObjectURL(url);
-  })
-  q('clearNotes').addEventListener('click',()=>{ if(confirm('Clear notes?')){ q('notesArea').value=''; localStorage.removeItem('pu_notes'); logAction('Clear notes'); }} )
-
-  // To-do
-  function renderTodo(){
-    const todos = JSON.parse(localStorage.getItem('pu_todo')||'[]');
-    const ul = q('todoList'); ul.innerHTML = todos.map((t,i)=>`<li class="todo-item"><input type="checkbox" data-i="${i}" ${t.done? 'checked':''} /><div style="flex:1;opacity:${t.done?0.6:1};text-decoration:${t.done?'line-through':''}">${t.txt}</div><button data-i="${i}" class="ghost">Del</button></li>`).join('');
-    Array.from(ul.querySelectorAll('input[type=checkbox]')).forEach(cb=>cb.addEventListener('change',e=>{ const i=+cb.dataset.i; const todos=JSON.parse(localStorage.getItem('pu_todo')||'[]'); todos[i].done=cb.checked; localStorage.setItem('pu_todo',JSON.stringify(todos)); renderTodo(); logAction('Toggle todo'); }));
-    Array.from(ul.querySelectorAll('button')).forEach(b=>b.addEventListener('click',e=>{ const i=+b.dataset.i; const todos=JSON.parse(localStorage.getItem('pu_todo')||'[]'); todos.splice(i,1); localStorage.setItem('pu_todo',JSON.stringify(todos)); renderTodo(); logAction('Delete todo'); }));
-  }
-  q('addTodo').addEventListener('click',()=>{ const txt=q('todoTxt').value.trim(); if(!txt) return; const todos=JSON.parse(localStorage.getItem('pu_todo')||'[]'); todos.unshift({txt,done:false}); localStorage.setItem('pu_todo',JSON.stringify(todos)); q('todoTxt').value=''; renderTodo(); logAction('Add todo '+txt); })
-
-  // Budget
-  q('applyBudget').addEventListener('click',()=>{
-    const inc = Number(q('income').value||0); const exp = Number(q('expense').value||0);
-    const rem = inc - exp; q('budgetRemaining').innerText = rem.toLocaleString(); localStorage.setItem('pu_budget', JSON.stringify({inc,exp,rem,ts:new Date().toISOString()})); logAction('Hitung budget: '+rem);
-  })
-  q('resetBudget').addEventListener('click',()=>{ q('income').value=''; q('expense').value=''; q('budgetRemaining').innerText='-'; localStorage.removeItem('pu_budget'); logAction('Reset budget'); })
-
-  // Avatar & name
-  q('imgInput').addEventListener('change',e=>{
-    const f = e.target.files && e.target.files[0]; if(!f) return; const r=new FileReader(); r.onload = ()=>{ localStorage.setItem('pu_avatar', r.result); renderAvatar(); logAction('Update avatar'); }; r.readAsDataURL(f);
-  })
-  q('nameInput').addEventListener('input',()=>{ const v=q('nameInput').value; q('displayName').innerText = v||'Nama Anda'; localStorage.setItem('pu_name', v); logAction('Ganti nama'); })
-  function renderAvatar(){ const d = localStorage.getItem('pu_avatar'); const av = q('avatar'); if(d){ av.innerHTML = '<img src="'+d+'" style="width:100%;height:100%;object-fit:cover;display:block">'; } else { av.textContent='Foto'; }}
-
-  // theme toggle (simple simulate)
-  q('darkToggle').addEventListener('click',()=>{ document.body.classList.toggle('light'); alert('Tema toggled (placeholder)'); logAction('Toggle theme'); })
-
-  // logs
-  q('clearLog').addEventListener('click',()=>{ if(confirm('Clear activity log?')){ localStorage.removeItem('pu_log'); renderLog(); } })
-
-  q('clearAll').addEventListener('click',()=>{ if(confirm('Hapus semua data lokal?')){ ['pu_notes','pu_todo','pu_links','pu_budget','pu_avatar','pu_name','pu_log'].forEach(k=>localStorage.removeItem(k)); location.reload(); } })
-
-  // load
-  (function init(){
-    q('notesArea').value = localStorage.getItem('pu_notes')||'';
-    renderLinks(); renderTodo(); renderLog(); renderAvatar(); q('displayName').innerText = localStorage.getItem('pu_name')||'Nama Anda'; q('nameInput').value = localStorage.getItem('pu_name')||'';
-    const b = JSON.parse(localStorage.getItem('pu_budget')||'null'); if(b) { q('income').value=b.inc; q('expense').value=b.exp; q('budgetRemaining').innerText = b.rem; }
-    logAction('Open dashboard');
-  })();
-})();
-</script>
+  <footer>Dibuat dengan ❤️ untuk masyarakat</footer>
 </body>
 </html>
