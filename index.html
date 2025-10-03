@@ -1,75 +1,130 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Portal Kerja & Rumah Subsidi</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lowongan & Rumah Subsidi</title>
   <style>
-    body { font-family: Arial, sans-serif; background:#f5f6fa; margin:0; padding:0;}
-    header { background:#2d3436; color:white; padding:18px; text-align:center;}
-    .container { max-width:1000px; margin:18px auto; padding:12px;}
-    button { padding:8px 14px; margin:6px; border:none; border-radius:6px; cursor:pointer; background:#0984e3; color:white;}
-    input { padding:8px; margin:6px 0; width:100%; box-sizing:border-box; }
-    .job-card { background:white; padding:12px; border-radius:8px; margin:10px 0; box-shadow:0 2px 6px rgba(0,0,0,0.08); }
-    table { width:100%; border-collapse:collapse; margin-top:12px; }
-    th, td { padding:8px; border:1px solid #ddd; text-align:left; }
-    th { background:#dfe6e9; }
-    footer { padding:12px; background:#dfe6e9; text-align:center; margin-top:18px; }
+    body { font-family: Arial, sans-serif; margin:20px; background:#f5f5f5; }
+    .card { background:#fff; padding:15px; margin:10px 0; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.1);}
     .hidden { display:none; }
+    button { margin:5px; padding:8px 12px; border:none; border-radius:5px; cursor:pointer; }
+    .btn-primary { background:#007bff; color:#fff; }
+    .btn-danger { background:#dc3545; color:#fff; }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Portal Lowongan Kerja & Rumah Subsidi</h1>
-    <p>🔎 Cari kerja & 🏠 Data rumah subsidi</p>
-  </header>
-
-  <div class="container">
-    <h2>Lowongan Kerja</h2>
-    <input id="keyword" placeholder="Masukkan kata kunci (contoh: analis kimia, qc, farmasi)" />
-    <button onclick="searchJob('linkedin')">LinkedIn</button>
-    <button onclick="searchJob('jobstreet')">JobStreet</button>
-    <button onclick="searchJob('jobsdb')">JobsDB</button>
-    <button onclick="searchJob('glints')">Glints</button>
-    <button onclick="searchJob('google')">Google Jobs</button>
-    <h3>Kategori Cepat</h3>
-    <button onclick="loadJobs('analis+kimia')">Analis Kimia</button>
-    <button onclick="loadJobs('quality+control')">QC</button>
-    <button onclick="loadJobs('research+and+development')">R&D</button>
-    <button onclick="loadJobs('farmasi')">Farmasi</button>
-    <div id="job-list">Pilih kategori untuk lihat lowongan...</div>
-    <hr>
-    <h2>Login Admin</h2>
-    <div id="loginBox" class="job-card">
-      <input id="loginEmail" placeholder="Email admin" />
-      <input id="loginPass" type="password" placeholder="Password" />
-      <button onclick="login()">Login</button>
-      <button onclick="logout()">Logout</button>
-      <p id="loginStatus"></p>
-    </div>
-    <div id="adminBox" class="job-card hidden">
-      <h3>Tambah Rumah Subsidi</h3>
-      <input id="formSales" placeholder="Nomor Sales (misal S001)" />
-      <input id="formNama" placeholder="Nama Perumahan" />
-      <input id="formLokasi" placeholder="Lokasi" />
-      <input id="formHarga" placeholder="Harga" />
-      <button onclick="addRumah()">Simpan</button>
-      <span id="statusMsg"></span>
-    </div>
-    <h2>Data Rumah Subsidi</h2>
-    <div class="job-card">
-      <h4>Cari Rumah Berdasarkan Nomor Sales</h4>
-      <input id="salesIdSearch" placeholder="Cari nomor sales..." />
-      <button onclick="searchRumah()">Cari</button>
-      <button onclick="loadAllRumah()">Tampilkan Semua</button>
-    </div>
-    <table id="rumahTable">
-      <thead>
-        <tr><th>Sales</th><th>Nama</th><th>Lokasi</th><th>Harga</th><th>Aksi</th></tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+  <h2>🔍 Cari Lowongan Kerja</h2>
+  <input type="text" id="jobSearch" placeholder="Cari lowongan...">
+  <button class="btn-primary" onclick="searchJob()">Cari</button>
+  <div>
+    <button onclick="searchJob('Analis Kimia')">Analis Kimia</button>
+    <button onclick="searchJob('QC')">QC</button>
+    <button onclick="searchJob('RnD')">RnD</button>
+    <button onclick="searchJob('Farmasi')">Farmasi</button>
   </div>
-  <footer>Dibuat dengan ❤️ untuk masyarakat</footer>
+  <hr>
+
+  <h2>🏠 Rumah Subsidi</h2>
+  <div id="rumahList"></div>
+
+  <div id="adminPanel" class="hidden">
+    <h3>Tambah Rumah</h3>
+    <input type="text" id="namaRumah" placeholder="Nama rumah"><br>
+    <input type="text" id="lokasiRumah" placeholder="Lokasi"><br>
+    <input type="text" id="salesRumah" placeholder="Nomor Sales"><br>
+    <button class="btn-primary" onclick="tambahRumah()">Tambah</button>
+  </div>
+
+  <div id="authPanel">
+    <h3>Login Admin</h3>
+    <input type="email" id="email" placeholder="Email"><br>
+    <input type="password" id="password" placeholder="Password"><br>
+    <button class="btn-primary" onclick="login()">Login</button>
+    <button class="btn-danger hidden" id="logoutBtn" onclick="logout()">Logout</button>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    // ✅ Config Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyD3X7k1IzdzuU3cEW38icUG3FdugQXfLYg",
+      authDomain: "add-firebase-to-web.firebaseapp.com",
+      projectId: "add-firebase-to-web",
+      storageBucket: "add-firebase-to-web.firebasestorage.app",
+      messagingSenderId: "301093491267",
+      appId: "1:301093491267:web:80194bccc4268efa88faf6",
+      measurementId: "G-K1SV7JDJ9G"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const rumahList = document.getElementById("rumahList");
+    const adminPanel = document.getElementById("adminPanel");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    async function loadRumah() {
+      rumahList.innerHTML = "";
+      const querySnapshot = await getDocs(collection(db, "rumah"));
+      querySnapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        const div = document.createElement("div");
+        div.className = "card";
+        div.innerHTML = `<b>${data.nama}</b><br>${data.lokasi}<br>Sales: ${data.sales}
+          <button class="btn-danger hidden" onclick="hapusRumah('${docSnap.id}')">Hapus</button>`;
+        rumahList.appendChild(div);
+      });
+    }
+    loadRumah();
+
+    window.tambahRumah = async function() {
+      const nama = document.getElementById("namaRumah").value;
+      const lokasi = document.getElementById("lokasiRumah").value;
+      const sales = document.getElementById("salesRumah").value;
+      await addDoc(collection(db, "rumah"), { nama, lokasi, sales });
+      loadRumah();
+    }
+
+    window.hapusRumah = async function(id) {
+      await deleteDoc(doc(db, "rumah", id));
+      loadRumah();
+    }
+
+    window.login = function() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      signInWithEmailAndPassword(auth, email, password)
+        .then(() => { alert("Login sukses"); })
+        .catch(err => alert("Login gagal: " + err.message));
+    }
+
+    window.logout = function() {
+      signOut(auth);
+    }
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        adminPanel.classList.remove("hidden");
+        logoutBtn.classList.remove("hidden");
+        document.querySelectorAll(".btn-danger").forEach(btn => btn.classList.remove("hidden"));
+      } else {
+        adminPanel.classList.add("hidden");
+        logoutBtn.classList.add("hidden");
+        document.querySelectorAll(".btn-danger").forEach(btn => btn.classList.add("hidden"));
+      }
+    });
+
+    window.searchJob = function(keyword) {
+      const q = keyword || document.getElementById("jobSearch").value;
+      if (q) {
+        window.open("https://www.jobstreet.co.id/id/job-search/" + encodeURIComponent(q) + "-jobs/", "_blank");
+      }
+    }
+  </script>
 </body>
 </html>
