@@ -1,101 +1,396 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" id="html-root">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Perumahan Subsidi & Komersil - Direktori Sales</title>
-<style>
-  body{font-family:Arial,sans-serif;background:#f4f6f8;margin:0;color:#222}
-  header{background:#0b5ed7;color:#fff;padding:18px;text-align:center}
-  .container{max-width:1000px;margin:18px auto;padding:12px}
-  .search{display:flex;gap:8px;margin-bottom:12px}
-  input[type=text]{flex:1;padding:10px;border-radius:6px;border:1px solid #cfd8e3}
-  button{padding:10px 12px;border-radius:6px;border:none;background:#0b5ed7;color:#fff;cursor:pointer}
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
-  .card{background:#fff;border-radius:8px;padding:12px;box-shadow:0 2px 6px rgba(12,38,63,0.08);display:flex;gap:12px;align-items:center}
-  .thumb{width:72px;height:72px;border-radius:8px;overflow:hidden;flex:0 0 72px}
-  .thumb img{width:100%;height:100%;object-fit:cover;display:block}
-  .info{flex:1}
-  .info h3{margin:0;font-size:16px}
-  .info p{margin:6px 0;color:#555;font-size:14px}
-  .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
-  .actions a{padding:8px 10px;background:#198754;color:#fff;border-radius:6px;text-decoration:none;font-size:14px}
-  .note{font-size:13px;color:#666;margin-top:12px}
-  footer{text-align:center;padding:14px;color:#666;font-size:14px}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Al-Qur'an Digital</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f9f7f0;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    body.dark-mode {
+      background: #121212;
+      color: #e0e0e0;
+    }
+
+    header {
+      background: #2c3e50;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+
+    header h1 {
+      font-size: 2rem;
+    }
+
+    .top-controls {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .nav-surah {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin: 15px 0;
+      flex-wrap: wrap;
+    }
+
+    .controls, .nav-surah, .top-controls {
+      text-align: center;
+    }
+
+    select, button {
+      padding: 8px 12px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      background: white;
+      cursor: pointer;
+    }
+
+    body.dark-mode select,
+    body.dark-mode button {
+      background: #2c2c2c;
+      color: #fff;
+      border: 1px solid #444;
+    }
+
+    .verse {
+      background: white;
+      margin: 15px auto;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      max-width: 800px;
+    }
+
+    body.dark-mode .verse {
+      background: #1e1e1e;
+      color: #f0f0f0;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+
+    .verse-number {
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      background: #e74c3c;
+      color: white;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 30px;
+      margin-right: 10px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .verse-text {
+      font-size: 1.4rem;
+      direction: rtl;
+      text-align: right;
+      font-family: 'Arial', 'Tahoma', sans-serif;
+    }
+
+    .translation {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed #ddd;
+      font-style: italic;
+      color: #555;
+    }
+
+    body.dark-mode .translation {
+      color: #bbb;
+      border-top-color: #444;
+    }
+
+    .audio-player {
+      text-align: center;
+      margin: 30px auto;
+      max-width: 600px;
+    }
+
+    #play-all, #bookmark-toggle {
+      margin-top: 10px;
+      margin: 0 5px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #7f8c8d;
+      font-size: 0.9rem;
+    }
+
+    footer a {
+      color: #3498db;
+      text-decoration: none;
+    }
+
+    @media (max-width: 768px) {
+      .verse-text {
+        font-size: 1.2rem;
+      }
+
+      .verse-number {
+        width: 26px;
+        height: 26px;
+        line-height: 26px;
+        font-size: 0.9rem;
+      }
+
+      .top-controls,
+      .nav-surah {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
 </head>
 <body>
-<header>
-  <h1>Perumahan Subsidi & Komersil - Direktori Sales</h1>
-  <div style="font-size:14px;opacity:0.9">Klik nomor untuk chat WA. Thumbnail dibuat otomatis (identicon) untuk privasi.</div>
-</header>
+  <header>
+    <h1>Al-Qur'an Digital</h1>
+    <p>Baca, dengar, dan pahami firman Allah</p>
+    
+    <div class="top-controls">
+      <button id="dark-mode-toggle">🌙 Mode Malam</button>
+      <select id="qori-select">
+        <option value="Alafasy_MP3">Mishary Al-Afasy</option>
+        <option value="Husary_Mujawwad_MP3">Mahmoud Khalil Al-Husary</option>
+        <option value="AbdulBaset_Murattal_192kbps">Abdul Basit (Murattal)</option>
+        <option value="Sa3ood_Shuraym">Sa'ad Al-Shuraym</option>
+      </select>
+    </div>
+  </header>
 
-<div class="container">
-  <div class="search">
-    <input type="text" id="q" placeholder="Cari nomor sales / masukkan kode (contoh: 877-7540)">
-    <button onclick="doFilter()">Cari</button>
-    <button onclick="resetFilter()" style="background:#6c757d">Reset</button>
-  </div>
+  <main>
+    <div class="nav-surah">
+      <button id="prev-surah" disabled>← Sebelumnya</button>
+      <select id="surah-select"></select>
+      <button id="next-surah">Berikutnya →</button>
+    </div>
 
-  <div id="grid" class="grid"></div>
+    <div id="quran-content"></div>
 
-  <div class="note">Catatan: Thumbnail dihasilkan otomatis dari layanan avatar (DiceBear). Jika ingin foto asli, upload manual untuk tiap sales.</div>
-</div>
-
-<footer>© Portal Perumahan</footer>
-
-<script>
-const salesData = [
-  {"phone":"+62 877-7540-4939","wa":"https://wa.me/6287775404939","name":"Sales A"},
-  {"phone":"+62 821-1286-3476","wa":"https://wa.me/6282112863476","name":"Sales B"},
-  {"phone":"wa_channel_6281218001342","wa":"https://wa.me/c/6281218001342","name":"Sales C"},
-  {"phone":"+62 813-8017-5975","wa":"https://wa.me/6281380175975","name":"Sales D"},
-  {"phone":"wa_channel_6289606275067","wa":"https://wa.me/c/6289606275067","name":"Sales E"},
-  {"phone":"wa_channel_6281262853292","wa":"https://wa.me/c/6281262853292","name":"Sales F"},
-  {"phone":"+62 812-1203-2885","wa":"https://wa.me/6281212032885","name":"Sales G"},
-  {"phone":"wa_channel_6281383663810","wa":"https://wa.me/c/6281383663810","name":"Sales H"},
-  {"phone":"wa_channel_6281111812711","wa":"https://wa.me/c/6281111812711","name":"Sales I"},
-  {"phone":"+62 815-1000-3493","wa":"https://wa.me/6281510003493","name":"Sales J"},
-  {"phone":"wa_channel_6281328293060","wa":"https://wa.me/c/6281328293060","name":"Sales K"},
-  {"phone":"wa_channel_628977296502","wa":"https://wa.me/c/628977296502","name":"Sales L"}
-];
-
-function avatarUrl(seed){
-  const s = encodeURIComponent(seed.replace(/\s+/g,''));
-  return `https://avatars.dicebear.com/api/identicon/${s}.svg`;
-}
-
-function render(list){
-  const grid = document.getElementById('grid');
-  grid.innerHTML='';
-  list.forEach(item=>{
-    const div = document.createElement('div');
-    div.className='card';
-    div.innerHTML = `
-      <div class="thumb"><img src="${avatarUrl(item.phone)}" alt="thumb"></div>
-      <div class="info">
-        <h3>${item.name}</h3>
-        <p>Nomor: ${item.phone}</p>
-        <div class="actions">
-          <a href="${item.wa}" target="_blank">Chat WA</a>
-          <a href="tel:${item.wa.includes('wa.me/c')?''+'' : item.wa.replace('https://wa.me/','')}" style="background:#0d6efd">Panggil</a>
-        </div>
+    <div class="audio-player">
+      <h3>Audio Qiro'ah</h3>
+      <audio id="audio-player" controls></audio>
+      <div>
+        <button id="play-all">▶️ Putar Semua Ayat</button>
+        <button id="bookmark-toggle">🔖 Simpan Ayat Ini</button>
       </div>
-    `;
-    grid.appendChild(div);
-  });
-}
+    </div>
+  </main>
 
-function doFilter(){
-  const q = document.getElementById('q').value.trim().toLowerCase();
-  if(!q){ render(salesData); return; }
-  const filtered = salesData.filter(s=> s.phone.toLowerCase().includes(q) || s.name.toLowerCase().includes(q));
-  render(filtered);
-}
+  <footer>
+    <p>Data dari <a href="https://alquran.cloud" target="_blank">AlQuran.cloud</a> & <a href="https://everyayah.com" target="_blank">EveryAyah.com</a></p>
+  </footer>
 
-function resetFilter(){ document.getElementById('q').value=''; render(salesData); }
+  <script>
+    // Konfigurasi
+    let currentSurahNumber = 1;
+    let currentAyahNumber = null;
+    let currentQori = 'Alafasy_MP3';
+    let bookmarks = JSON.parse(localStorage.getItem('quran-bookmarks')) || [];
+    let currentSurahData = null;
+    let currentAyahIndex = 0;
+    let audioQueue = [];
 
-render(salesData);
-</script>
+    // DOM Elements
+    const htmlRoot = document.getElementById('html-root');
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
+    const qoriSelect = document.getElementById('qori-select');
+    const surahSelect = document.getElementById('surah-select');
+    const prevBtn = document.getElementById('prev-surah');
+    const nextBtn = document.getElementById('next-surah');
+    const bookmarkBtn = document.getElementById('bookmark-toggle');
+
+    // Load saved dark mode
+    if (localStorage.getItem('dark-mode') === 'true') {
+      document.body.classList.add('dark-mode');
+      darkModeToggle.textContent = '☀️ Mode Terang';
+    }
+
+    // Toggle dark mode
+    darkModeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      const isDark = document.body.classList.contains('dark-mode');
+      localStorage.setItem('dark-mode', isDark);
+      darkModeToggle.textContent = isDark ? '☀️ Mode Terang' : '🌙 Mode Malam';
+    });
+
+    // Ganti qori
+    qoriSelect.addEventListener('change', (e) => {
+      currentQori = e.target.value;
+      if (currentAyahNumber) {
+        playAudio(currentAyahNumber);
+      }
+    });
+
+    // Navigasi surah
+    prevBtn.addEventListener('click', () => {
+      if (currentSurahNumber > 1) {
+        loadSurah(--currentSurahNumber);
+      }
+    });
+
+    nextBtn.addEventListener('click', () => {
+      if (currentSurahNumber < 114) {
+        loadSurah(++currentSurahNumber);
+      }
+    });
+
+    // Bookmark toggle
+    bookmarkBtn.addEventListener('click', () => {
+      if (!currentAyahNumber) return;
+
+      const key = `${currentSurahNumber}-${currentAyahNumber}`;
+      if (bookmarks.includes(key)) {
+        bookmarks = bookmarks.filter(b => b !== key);
+        bookmarkBtn.textContent = '🔖 Simpan Ayat Ini';
+      } else {
+        bookmarks.push(key);
+        bookmarkBtn.textContent = '✅ Tersimpan!';
+        setTimeout(() => bookmarkBtn.textContent = '🔖 Simpan Ayat Ini', 1500);
+      }
+      localStorage.setItem('quran-bookmarks', JSON.stringify(bookmarks));
+    });
+
+    // Update UI bookmark status
+    function updateBookmarkButton(surahNum, ayahNum) {
+      currentAyahNumber = ayahNum;
+      const key = `${surahNum}-${ayahNum}`;
+      bookmarkBtn.textContent = bookmarks.includes(key) ? '✅ Tersimpan!' : '🔖 Simpan Ayat Ini';
+    }
+
+    // === Fungsi Utama ===
+
+    async function loadSurahList() {
+      try {
+        const res = await fetch('https://api.alquran.cloud/v1/meta');
+        const data = await res.json();
+        const surahs = data.data.surahs.references;
+
+        surahSelect.innerHTML = '';
+        surahs.forEach(surah => {
+          const option = document.createElement('option');
+          option.value = surah.number;
+          option.textContent = `${surah.number}. ${surah.englishName} (${surah.name})`;
+          surahSelect.appendChild(option);
+        });
+
+        surahSelect.value = currentSurahNumber;
+        loadSurah(currentSurahNumber);
+      } catch (err) {
+        console.error('Gagal memuat daftar surah:', err);
+        document.getElementById('quran-content').innerHTML = '<p style="text-align:center;color:red;">Gagal memuat data. Periksa koneksi internet.</p>';
+      }
+    }
+
+    async function loadSurah(surahNumber) {
+      currentSurahNumber = parseInt(surahNumber);
+      surahSelect.value = currentSurahNumber;
+      
+      prevBtn.disabled = currentSurahNumber === 1;
+      nextBtn.disabled = currentSurahNumber === 114;
+
+      try {
+        const res = await fetch(`https://api.alquran.cloud/v1/surah/${surahNumber}/id.indonesian`);
+        const data = await res.json();
+        currentSurahData = data.data;
+        renderSurah();
+      } catch (err) {
+        console.error('Gagal memuat surah:', err);
+        document.getElementById('quran-content').innerHTML = '<p style="text-align:center;color:red;">Gagal memuat surah. Coba lagi nanti.</p>';
+      }
+    }
+
+    function renderSurah() {
+      const container = document.getElementById('quran-content');
+      container.innerHTML = '';
+
+      currentSurahData.ayahs.forEach(ayah => {
+        const verseDiv = document.createElement('div');
+        verseDiv.className = 'verse';
+
+        const verseNumber = document.createElement('span');
+        verseNumber.className = 'verse-number';
+        verseNumber.textContent = ayah.numberInSurah;
+        verseNumber.onclick = () => {
+          playAudio(ayah.number);
+          updateBookmarkButton(currentSurahNumber, ayah.numberInSurah);
+        };
+
+        const verseText = document.createElement('div');
+        verseText.className = 'verse-text';
+        verseText.textContent = ayah.text;
+
+        const translation = document.createElement('div');
+        translation.className = 'translation';
+        translation.textContent = ayah.edition.text;
+
+        verseDiv.appendChild(verseNumber);
+        verseDiv.appendChild(verseText);
+        verseDiv.appendChild(translation);
+        container.appendChild(verseDiv);
+      });
+
+      audioQueue = currentSurahData.ayahs.map(ayah => ayah.number);
+    }
+
+    function playAudio(ayahNumber) {
+      const audioPlayer = document.getElementById('audio-player');
+      const audioUrl = `https://everyayah.com/data/${currentQori}/${String(ayahNumber).padStart(3, '0')}.mp3`;
+      audioPlayer.src = audioUrl;
+      audioPlayer.play().catch(e => console.warn("Gagal memutar audio:", e));
+    }
+
+    document.getElementById('play-all').addEventListener('click', () => {
+      currentAyahIndex = 0;
+      playNextAudio();
+    });
+
+    function playNextAudio() {
+      if (currentAyahIndex >= audioQueue.length) return;
+
+      const ayahNumber = audioQueue[currentAyahIndex];
+      const audioPlayer = document.getElementById('audio-player');
+      const audioUrl = `https://everyayah.com/data/${currentQori}/${String(ayahNumber).padStart(3, '0')}.mp3`;
+
+      audioPlayer.src = audioUrl;
+      audioPlayer.onended = () => {
+        currentAyahIndex++;
+        playNextAudio();
+      };
+      audioPlayer.play().catch(e => {
+        console.warn("Gagal memutar audio:", e);
+        currentAyahIndex++;
+        playNextAudio();
+      });
+    }
+
+    surahSelect.addEventListener('change', (e) => {
+      loadSurah(e.target.value);
+    });
+
+    // Inisialisasi
+    loadSurahList();
+  </script>
 </body>
 </html>
