@@ -181,5 +181,44 @@ function searchKeyword() {
     .catch(err => {
       resultsDiv.innerHTML = "Terjadi kesalahan saat mencari.";
       console.error(err);
+      
     });
 }
+// ... existing code ...
+
+function loadSurah(surahNumber) {
+  // Fetch the surah with Indonesian translation, which also contains the Arabic text
+  fetch(`https://api.alquran.cloud/v1/surah/${surahNumber}/id.indonesian`)
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("surah-title").innerText = `${data.data.name} - ${data.data.englishName}`;
+      const ayatList = document.getElementById("ayat-list");
+      ayatList.innerHTML = "";
+
+      // Store ayah numbers for autoplay
+      currentSurahAyahs = data.data.ayahs.map(ayah => ayah.number);
+
+      data.data.ayahs.forEach(ayah => {
+        const ayatDiv = document.createElement("div");
+        ayatDiv.classList.add("ayat");
+        ayatDiv.setAttribute("data-ayah-number", ayah.number);
+
+        // FIX: Displaying the Arabic text (ayah.text) with the proper class.
+        // It was already present in the API response but needed the .arabic-text class.
+        // Note: The ayah.text here is the Arabic Uthmani text.
+        ayatDiv.innerHTML = `
+          <p class="arabic-text">${ayah.text} <small>(${ayah.numberInSurah})</small></p>
+          <p><em>Terjemahan:</em> ${ayah.translation}</p>
+          <button onclick="playAudio(${ayah.number})">🔊 Putar Audio</button>
+          <button onclick="bookmarkAyat(${ayah.number})">⭐ Simpan Ayat</button>
+        `;
+
+        ayatList.appendChild(ayatDiv);
+      });
+
+      // Load Tafsir is moved to be called after the ayats are rendered
+      loadTafsir(surahNumber); 
+    });
+}
+
+// ... rest of script.js remains the same ...
