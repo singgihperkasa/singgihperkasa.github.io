@@ -1,41 +1,11 @@
-body {
-  font-family: sans-serif;
-  background-color: #f9f9f9;
-  color: #333;
-  margin: 0;
-  padding: 20px;
-}
-body.dark {
-  background-color: #121212;
-  color: #eee;
-}
-header, footer {
-  text-align: center;
-  margin-bottom: 20px;
-}
-.ayat {
-  background: #fff;
-  border: 1px solid #ddd;
-  padding: 15px;
-  margin-bottom: 10px;
-  border-radius: 5px;
-}
-body.dark .ayat {
-  background-color: #1e1e1e;
-  border-color: #444;
-}
-button {
-  background-color: #006666;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  cursor: pointer;
-  border-radius: 4px;
-}
-input, select {
-  padding: 6px;
-  margin: 5px 0;
-}
-details {
-  margin-top: 10px;
+/* ... existing CSS ... */
+
+/* New CSS for Arabic text */
+.arabic-text {
+  font-family: 'Scheherazade New', 'Amiri', 'Arial', sans-serif; /* Use common Arabic fonts, or specify one if linked */
+  font-size: 28px; /* Larger size for clarity */
+  text-align: right; /* Right-to-left alignment */
+  direction: rtl; /* Right-to-left text direction */
+  line-height: 2;
+  margin-bottom: 15px;
 }
