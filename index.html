@@ -1,12 +1,46 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Website Singgih Perkasa</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quran Digital - Singgih</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Halo, ini website saya!</h1>
-  <p>Ini halaman utama.</p>
+  <header>
+    <h1>Quran Digital</h1>
+    <p>Menemani harimu dengan ayat suci</p>
+    <label><input type="checkbox" id="darkToggle" onchange="toggleDarkMode()" /> Mode Gelap</label>
+  </header>
+
+  <main>
+    <section id="surah-selector">
+      <label for="surahSelect">Pilih Surah:</label>
+      <select id="surahSelect" onchange="loadSurah(this.value)"></select>
+    </section>
+
+    <section id="search">
+      <h2>Cari Kata</h2>
+      <input type="text" id="searchInput" placeholder="Contoh: sabar, sholat..." />
+      <button onclick="searchKeyword()">Cari</button>
+      <div id="searchResults"></div>
+    </section>
+
+    <section id="surah-detail">
+      <h2 id="surah-title">Surah</h2>
+      <div id="ayat-list"></div>
+    </section>
+
+    <section id="bookmarks">
+      <h2>Ayat Favorit</h2>
+      <ul id="bookmarkList"></ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 Singgih Perkasa</p>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
-
