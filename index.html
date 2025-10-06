@@ -43,4 +43,21 @@
 
   <script src="script.js"></script>
 </body>
+  <body>
+  <header>
+    <h1>Baca Al-Qur’an Online</h1>
+    <select id="surahSelect" onchange="loadSurah(this.value)"></select>
+    <button onclick="toggleDarkMode()">🌙 Mode Gelap</button>
+  </header>
+
+  <main>
+    <h2 id="surah-title"></h2>
+    <div id="ayat-list"></div>
+  </main>
+
+  <footer>© Al-Qur’an Web by Singgih Perkasa</footer>
+
+  <script src="script.js"></script>
+  </body>
+  
 </html>
