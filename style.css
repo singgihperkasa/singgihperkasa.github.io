@@ -17,3 +17,22 @@
 .terjemahan {
   margin-top: 0.5em;
 }
+.ayat-block {
+  margin-bottom: 2em;
+  padding: 1em;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+.arab {
+  font-size: 1.5em;
+  direction: rtl;
+  text-align: right;
+}
+.latin {
+  font-style: italic;
+  color: #555;
+}
+.terjemahan {
+  margin-top: 0.5em;
+}
