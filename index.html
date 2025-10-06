@@ -1,29 +1,83 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Quran Digital</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Al-Qur'an Digital — singgihperkasa.github.io</title>
+
+  <!-- Beautiful Arabic fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital@0;1&family=Noto+Naskh+Arabic:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{--bg:#f7fafc;--card:#ffffff;--muted:#6b7280}
+    body{font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; background:var(--bg); margin:0; color:#111827}
+    .wrap{max-width:980px;margin:28px auto;padding:18px}
+    header{display:flex;gap:16px;align-items:center}
+    h1{margin:0;font-size:20px}
+    .card{background:var(--card);border-radius:12px;padding:16px;box-shadow:0 6px 18px rgba(15,23,42,0.08)}
+    .controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+    select, button{padding:8px 10px;border-radius:8px;border:1px solid #e5e7eb;background:white}
+    main{display:grid;grid-template-columns:1fr 360px;gap:16px;margin-top:16px}
+    .ayahs{padding:12px}
+    .ayah{padding:10px;border-bottom:1px dashed #eef2f7}
+    .arab{font-family:'Noto Naskh Arabic','Amiri',serif;font-size:26px;line-height:1.6;text-align:right;direction:rtl}
+    .translation{color:var(--muted);margin-top:6px}
+    .sidebar{position:sticky;top:20px}
+    .audio-controls{display:flex;gap:8px;align-items:center;margin-top:10px}
+    .small{font-size:12px;color:var(--muted)}
+    footer{margin-top:20px;text-align:center;color:var(--muted);font-size:13px}
+    @media (max-width:900px){main{grid-template-columns:1fr} .sidebar{position:static}}
+  </style>
 </head>
 <body>
-  <header>
-    <h1>Quran Digital</h1>
-    <nav>
-      <a href="index.html">Beranda</a>
-      <a href="surah.html">Daftar Surah</a>
-    </nav>
-  </header>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Al-Qur'an Digital — singgihperkasa.github.io</h1>
+        <div class="small">Arabic (indah) • Terjemahan Indonesia • Play murattal</div>
+      </div>
+    </header>
 
-  <main>
-    <section>
-      <h2>Selamat datang!</h2>
-      <p>Website ini menyediakan teks Al-Quran, terjemahan, audio tilawah, dan fitur pencarian.</p>
-    </section>
-  </main>
+    <section class="card">
+      <div class="controls">
+        <label>
+          Pilih Surah
+          <select id="surahSelect"><option>Memuat...</option></select>
+        </label>
 
-  <footer>
-    <p>&copy; 2025 Singgih Quran Project</p>
-  </footer>
-</body>
-</html>
+        <label>
+          Terjemahan
+          <select id="translationSelect">
+            <option value="id.indonesian">Indonesia (default)</option>
+            <option value="en.asad">English (Asad)</option>
+            <option value="quran-uthmani">Arabic (Uthmani)</option>
+          </select>
+        </label>
+
+        <button id="loadBtn">Tampilkan</button>
+        <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+          <button id="prevBtn">◀ Prev</button>
+          <button id="nextBtn">Next ▶</button>
+        </div>
+      </div>
+
+      <main>
+        <div class="card ayahs" id="content">
+          <div class="small">Pilih surah lalu klik <b>Tampilkan</b>. Contoh: Al-Fatihah tampil di sini.</div>
+        </div>
+
+        <aside class="sidebar">
+          <div class="card" style="padding:14px">
+            <div><strong id="surahTitle">—</strong></div>
+            <div class="small" id="surahMeta">—</div>
+
+            <div class="audio-controls">
+              <button id="playSurah">Play Surah</button>
+              <button id="pauseSurah">Pause</button>
+            </div>
+
+            <audio id="surahAudio" preload="none"></audio>
+
+            <hr/>
+            <div class="small">Pengaturan font arab (contoh):</div>
+            <div style="margin-top
