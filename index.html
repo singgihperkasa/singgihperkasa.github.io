@@ -5,25 +5,25 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Al-Qur'an Digital — singgihperkasa.github.io</title>
 
-  <!-- Beautiful Arabic fonts -->
+  <!-- Arabic fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Amiri:ital@0;1&family=Noto+Naskh+Arabic:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
     :root{--bg:#f7fafc;--card:#ffffff;--muted:#6b7280}
     body{font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; background:var(--bg); margin:0; color:#111827}
-    .wrap{max-width:980px;margin:28px auto;padding:18px}
+    .wrap{max-width:1000px;margin:28px auto;padding:18px}
     header{display:flex;gap:16px;align-items:center}
-    h1{margin:0;font-size:20px}
+    h1{margin:0;font-size:22px}
     .card{background:var(--card);border-radius:12px;padding:16px;box-shadow:0 6px 18px rgba(15,23,42,0.08)}
     .controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
     select, button{padding:8px 10px;border-radius:8px;border:1px solid #e5e7eb;background:white}
-    main{display:grid;grid-template-columns:1fr 360px;gap:16px;margin-top:16px}
-    .ayahs{padding:12px}
+    main{display:grid;grid-template-columns:1fr 340px;gap:16px;margin-top:16px}
     .ayah{padding:10px;border-bottom:1px dashed #eef2f7}
-    .arab{font-family:'Noto Naskh Arabic','Amiri',serif;font-size:26px;line-height:1.6;text-align:right;direction:rtl}
-    .translation{color:var(--muted);margin-top:6px}
+    .arab{font-family:'Noto Naskh Arabic','Amiri',serif;font-size:28px;line-height:1.8;text-align:right;direction:rtl}
+    .translation{color:var(--muted);margin-top:6px;font-size:15px}
     .sidebar{position:sticky;top:20px}
     .audio-controls{display:flex;gap:8px;align-items:center;margin-top:10px}
+    .ayah-controls{display:flex;align-items:center;gap:6px;margin-top:4px}
     .small{font-size:12px;color:var(--muted)}
     footer{margin-top:20px;text-align:center;color:var(--muted);font-size:13px}
     @media (max-width:900px){main{grid-template-columns:1fr} .sidebar{position:static}}
@@ -32,28 +32,14 @@
 <body>
   <div class="wrap">
     <header>
-      <div>
-        <h1>Al-Qur'an Digital — singgihperkasa.github.io</h1>
-        <div class="small">Arabic (indah) • Terjemahan Indonesia • Play murattal</div>
-      </div>
+      <h1>Al-Qur'an Digital — singgihperkasa.github.io</h1>
     </header>
 
     <section class="card">
       <div class="controls">
-        <label>
-          Pilih Surah
+        <label>Pilih Surah
           <select id="surahSelect"><option>Memuat...</option></select>
         </label>
-
-        <label>
-          Terjemahan
-          <select id="translationSelect">
-            <option value="id.indonesian">Indonesia (default)</option>
-            <option value="en.asad">English (Asad)</option>
-            <option value="quran-uthmani">Arabic (Uthmani)</option>
-          </select>
-        </label>
-
         <button id="loadBtn">Tampilkan</button>
         <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
           <button id="prevBtn">◀ Prev</button>
@@ -62,8 +48,8 @@
       </div>
 
       <main>
-        <div class="card ayahs" id="content">
-          <div class="small">Pilih surah lalu klik <b>Tampilkan</b>. Contoh: Al-Fatihah tampil di sini.</div>
+        <div class="card" id="content">
+          <div class="small">Pilih surah lalu klik <b>Tampilkan</b>.</div>
         </div>
 
         <aside class="sidebar">
@@ -79,5 +65,100 @@
             <audio id="surahAudio" preload="none"></audio>
 
             <hr/>
-            <div class="small">Pengaturan font arab (contoh):</div>
-            <div style="margin-top
+            <div class="small">Ukuran font arab:</div>
+            <div style="margin-top:8px">
+              <button id="bigArab">Arab +</button>
+              <button id="smArab">Arab -</button>
+            </div>
+
+            <hr/>
+            <div class="small">Qari:</div>
+            <select id="qariSelect">
+              <option value="ar.alafasy">Mishary Alafasy</option>
+              <option value="ar.husary">Husary</option>
+              <option value="ar.abdulsamad">Abdul Basit</option>
+              <option value="ar.minshawi">Minshawi</option>
+            </select>
+          </div>
+        </aside>
+      </main>
+
+      <footer>File siap diupload ke <code>singgihperkasa.github.io</code>. Data teks dan audio via Al-Quran Cloud API (terjemahan Kemenag).</footer>
+    </section>
+  </div>
+
+  <script>
+    const surahSelect = document.getElementById('surahSelect');
+    const loadBtn = document.getElementById('loadBtn');
+    const content = document.getElementById('content');
+    const surahTitle = document.getElementById('surahTitle');
+    const surahMeta = document.getElementById('surahMeta');
+    const surahAudio = document.getElementById('surahAudio');
+    const playSurah = document.getElementById('playSurah');
+    const pauseSurah = document.getElementById('pauseSurah');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const bigArab = document.getElementById('bigArab');
+    const smArab = document.getElementById('smArab');
+    const qariSelect = document.getElementById('qariSelect');
+
+    let surahs = [];
+    let currentSurah = 1;
+    let arabFontSize = 28;
+
+    async function loadSurahList(){
+      surahSelect.innerHTML = '<option>Memuat...</option>';
+      const res = await fetch('https://api.alquran.cloud/v1/surah');
+      const json = await res.json();
+      surahs = json.data;
+      surahSelect.innerHTML = surahs.map(s=>`<option value="${s.number}">${s.number}. ${s.englishName} — ${s.name}</option>`).join('');
+    }
+
+    async function showSurah(n){
+      content.innerHTML = '<div class="small">Memuat surah...</div>';
+      surahTitle.textContent = 'Memuat...';
+      const arabResp = await fetch(`https://api.alquran.cloud/v1/surah/${n}/quran-uthmani`);
+      const transResp = await fetch(`https://api.alquran.cloud/v1/surah/${n}/id.kemenag`);
+      const arabJson = await arabResp.json();
+      const transJson = await transResp.json();
+
+      const s = arabJson.data;
+      currentSurah = s.number;
+      surahTitle.textContent = `${s.number}. ${s.englishName} — ${s.name}`;
+      surahMeta.textContent = `${s.numberOfAyahs} ayat • ${s.revelationType}`;
+
+      content.innerHTML = s.ayahs.map((ayah, idx)=>{
+        const transText = (transJson && transJson.data.ayahs[idx]) ? transJson.data.ayahs[idx].text : '';
+        return `<div class="ayah">
+          <div class="arab" style="font-size:${arabFontSize}px">${ayah.text}</div>
+          <div class="translation">${transText}</div>
+          <div class="ayah-controls"><button class="playAya" data-num="${ayah.number}">▶️</button><span class="small">Ayat ${ayah.numberInSurah}</span></div>
+        </div>`;
+      }).join('');
+
+      surahAudio.src = `https://cdn.islamic.network/quran/audio-surah/128/${qariSelect.value}/${s.number}.mp3`;
+      surahAudio.load();
+
+      document.querySelectorAll('.playAya').forEach(btn=>{
+        btn.addEventListener('click',()=>{
+          const num = btn.getAttribute('data-num');
+          const ayaAudio = new Audio(`https://cdn.islamic.network/quran/audio/128/${qariSelect.value}/${num}.mp3`);
+          ayaAudio.play();
+        });
+      });
+    }
+
+    loadBtn.addEventListener('click', ()=> showSurah(parseInt(surahSelect.value||1)));
+    playSurah.addEventListener('click', ()=> surahAudio.play());
+    pauseSurah.addEventListener('click', ()=> surahAudio.pause());
+    prevBtn.addEventListener('click', ()=>{if(currentSurah>1){currentSurah--;surahSelect.value=currentSurah;showSurah(currentSurah);}});
+    nextBtn.addEventListener('click', ()=>{if(currentSurah<114){currentSurah++;surahSelect.value=currentSurah;showSurah(currentSurah);}});
+    bigArab.addEventListener('click', ()=>{arabFontSize+=4;document.querySelectorAll('.arab').forEach(e=>e.style.fontSize=arabFontSize+'px');});
+    smArab.addEventListener('click', ()=>{arabFontSize=Math.max(14,arabFontSize-4);document.querySelectorAll('.arab').forEach(e=>e.style.fontSize=arabFontSize+'px');});
+
+    qariSelect.addEventListener('change', ()=> showSurah(currentSurah));
+
+    loadSurahList().then(()=>{surahSelect.value=1;showSurah(1);});
+  </script>
+</body>
+</html>
