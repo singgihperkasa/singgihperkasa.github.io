@@ -38,16 +38,19 @@ loadBtn.addEventListener("click", async () => {
 
   // tampilkan ayat & terjemahan
   content.innerHTML = surah.verses
-    .map(
-      (v) => `
-        <div class="ayah">
-          <div class="arab">${v.text.arab}</div>
-          <div class="translation">${v.translation.id}</div>
-          <div class="ayah-controls small">[${v.number.inSurah}]</div>
+  .map(
+    (v) => `
+      <div class="ayah">
+        <div class="arab">${v.text.arab}</div>
+        <div class="translation">
+          ${v.translation?.id || v.translation?.en || "(terjemahan tidak tersedia)"}
         </div>
-      `
-    )
-    .join("");
+        <div class="ayah-controls small">Ayat ${v.number.inSurah}</div>
+      </div>
+    `
+  )
+  .join("");
+
 
   // audio surah
   surahAudio.src = surah.preBismillah
