@@ -1,76 +1,352 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Quran Digital - Singgih</title>
-  <link rel="stylesheet" href="style.css" />
-  
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Bacaan Al-Qur'an - Singgih Perkasa</title>
+
+  <!-- Fonts (Arabic + serif for translation) -->
+  <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Noto+Serif:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --primary:#0b7b6b;
+      --card-bg:#fff;
+      --muted:#666;
+      --maxw:900px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:"Noto Serif", serif;
+      background:#f6f7f9;
+      color:#222;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding:18px;
+      display:flex;
+      justify-content:center;
+    }
+    .site{
+      width:100%;
+      max-width:var(--maxw);
+    }
+
+    header{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:16px;
+    }
+    header h1{margin:0;font-size:20px}
+    .controls{display:flex;gap:8px;align-items:center}
+    select, input[type="search"], button{
+      padding:8px 10px;border-radius:6px;border:1px solid #d6dbe1;
+      font-size:14px;
+    }
+    button{background:var(--primary);color:#fff;border:none;cursor:pointer}
+    .main{
+      display:grid;
+      grid-template-columns: 1fr 320px;
+      gap:16px;
+      align-items:start;
+    }
+
+    /* content column */
+    .content{ }
+    .surah-title{
+      font-size:22px;margin:0 0 12px 0;display:flex;align-items:center;gap:10px;
+    }
+    .surah-meta{color:var(--muted);font-size:14px;margin-bottom:8px}
+
+    .ayat{
+      background:var(--card-bg);
+      border-radius:8px;
+      padding:20px;
+      box-shadow:0 2px 6px rgba(16,24,40,0.04);
+      margin-bottom:12px;
+      border:1px solid #eef1f4;
+    }
+
+    .arabic{
+      font-family: "Amiri", serif;
+      direction: rtl;
+      text-align: right;
+      font-size:28px;
+      line-height:1.9;
+      margin:0 0 10px 0;
+      word-break:break-word;
+    }
+
+    .trans{
+      font-size:18px;
+      color:#222;
+      margin:0 0 8px 0;
+      text-align:center;
+    }
+
+    .meta-line{color:var(--muted);font-style:italic;margin-bottom:8px}
+    .ayat .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .small-btn{background:#0d6efd;padding:8px 10px;border-radius:6px;color:#fff;text-decoration:none;border:none;cursor:pointer}
+    .bookmark-list{background:#fff;padding:12px;border-radius:8px;border:1px solid #eef1f4}
+    .bookmark-list h3{margin:0 0 8px 0;font-size:16px}
+    .bookmark-list ul{list-style:none;padding:0;margin:0}
+    .bookmark-list li{padding:6px 0;border-bottom:1px dashed #eee;font-size:14px}
+    .note{color:var(--muted);font-size:13px;margin-top:8px}
+
+    /* responsive */
+    @media (max-width:900px){
+      .main{grid-template-columns:1fr; padding-bottom:36px}
+      .arabic{font-size:24px}
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>Quran Digital</h1>
-    <p>Menemani harimu dengan ayat suci</p>
-    <label><input type="checkbox" id="darkToggle" onchange="toggleDarkMode()" /> Mode Gelap</label>
-  </header>
-<link href="https://fonts.googleapis.com/css2?family=Amiri&family=Scheherazade+New&display=swap" rel="stylesheet">
-  
-  <main>
-    <section id="surah-selector">
-      <label for="surahSelect">Pilih Surah:</label>
-      <select id="surahSelect" onchange="loadSurah(this.value)"></select>
-    </section>
+  <div class="site">
+    <header>
+      <h1>Bacaan Al-Qur'an</h1>
 
-    <section id="search">
-      <h2>Cari Kata</h2>
-      <input type="text" id="searchInput" placeholder="Contoh: sabar, sholat..." />
-      <button onclick="searchKeyword()">Cari</button>
-      <div id="searchResults"></div>
-    </section>
+      <div class="controls">
+        <select id="surahSelect" aria-label="Pilih Surah"></select>
+        <input id="searchInput" type="search" placeholder="Cari kata (contoh: rahman)" />
+        <button id="searchBtn">Cari</button>
+      </div>
+    </header>
 
-    <section id="surah-detail">
-      <h2 id="surah-title">Surah</h2>
-      <div id="ayat-list"></div>
-    </section>
+    <div class="main">
+      <div class="content">
+        <div class="surah-info">
+          <h2 id="surah-title" class="surah-title">Memuat...</h2>
+          <div id="surah-meta" class="surah-meta"></div>
+        </div>
 
-    <section id="bookmarks">
-      <h2>Ayat Favorit</h2>
-      <ul id="bookmarkList"></ul>
-    </section>
-  </main>
+        <div id="ayat-list"></div>
+      </div>
 
-  <footer>
-    <p>© 2025 Singgih Perkasa</p>
-  </footer>
+      <aside>
+        <div class="bookmark-list">
+          <h3>Bookmark Ayat</h3>
+          <ul id="bookmarkList">
+            <li>Tidak ada bookmark</li>
+          </ul>
+          <div class="note">Bookmark disimpan di browser Anda (localStorage).</div>
+        </div>
+        <div style="height:12px"></div>
+        <div class="bookmark-list" style="margin-top:12px">
+          <h3>Petunjuk</h3>
+          <ul style="font-size:13px;color:var(--muted);padding-left:18px">
+            <li>Gunakan dropdown untuk ganti surah</li>
+            <li>Tekan Putar untuk audio</li>
+            <li>Jika teks Arab kosong, coba reload / cek koneksi</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </div>
 
-  <script src="script.js"></script>
+<script>
+/* Quran viewer using api.quran.sutanlab.id
+   Features: list surah, load surah, show arabic + translation + audio, bookmarks, search
+*/
+
+const API_BASE = 'https://api.quran.sutanlab.id';
+
+// init
+document.addEventListener('DOMContentLoaded',() => {
+  loadSurahList();
+  document.getElementById('surahSelect').addEventListener('change', e => loadSurah(e.target.value));
+  document.getElementById('searchBtn').addEventListener('click', searchKeyword);
+  document.getElementById('searchInput').addEventListener('keyup', (e)=>{ if(e.key==='Enter') searchKeyword(); });
+  showBookmarks();
+});
+
+// load list of surah
+async function loadSurahList(){
+  try{
+    const res = await fetch(`${API_BASE}/surah`);
+    const json = await res.json();
+    if(!json || !json.data) throw new Error('Gagal ambil daftar surah');
+    const sel = document.getElementById('surahSelect');
+    sel.innerHTML = '';
+    json.data.forEach(s => {
+      const opt = document.createElement('option');
+      opt.value = s.number;
+      opt.textContent = `${s.number}. ${s.name.simple} — ${s.name.transliteration.id}`;
+      sel.appendChild(opt);
+    });
+    // default load 1
+    loadSurah(1);
+  }catch(err){
+    console.error(err);
+    document.getElementById('surah-title').innerText = 'Gagal memuat daftar surah';
+  }
+}
+
+// load a surah by number
+async function loadSurah(number){
+  if(!number) number = 1;
+  const titleEl = document.getElementById('surah-title');
+  const metaEl = document.getElementById('surah-meta');
+  const ayatList = document.getElementById('ayat-list');
+  titleEl.innerText = 'Memuat...';
+  metaEl.innerText = '';
+  ayatList.innerHTML = '';
+
+  try{
+    const res = await fetch(`${API_BASE}/surah/${number}`);
+    const json = await res.json();
+    if(!json || !json.data) throw new Error('Tidak ada data surah');
+    const s = json.data;
+    // set title
+    titleEl.innerHTML = `${s.name.long} - ${s.name.transliteration.id} <span style="font-size:14px;color:var(--muted);margin-left:8px">(${s.numberOfVerses} ayat, ${s.revelation.id})</span>`;
+    metaEl.innerText = s.name.translation.id ? `Terjemahan nama: ${s.name.translation.id}` : '';
+
+    // verses
+    ayatList.innerHTML = '';
+    s.verses.forEach(v => {
+      const div = document.createElement('div');
+      div.className = 'ayat';
+      const arab = v.text && (v.text.arab || v.text) ? (v.text.arab || v.text) : '';
+      // translation object
+      let translationText = '';
+      if(v.translation && v.translation.id) translationText = v.translation.id;
+      else if(v.translation && typeof v.translation === 'string') translationText = v.translation;
+      else translationText = '';
+
+      // build HTML
+      div.innerHTML = `
+        <p class="arabic">${arab}</p>
+        <p class="trans">${translationText || '<span style="color:#d33">[Terjemahan tidak tersedia]</span>'}</p>
+        <div class="meta-line">Ayat ${v.number.inSurah}</div>
+        <div class="actions">
+          <button class="small-btn" onclick="playAudioUrl('${escapeAudioUrl(v.audio && v.audio.primary)}')">🔊 Putar Audio</button>
+          <button class="small-btn" onclick="bookmarkAyat(${s.number}, ${v.number.inSurah}, ${v.number.global})">⭐ Simpan Ayat</button>
+        </div>
+      `;
+      ayatList.appendChild(div);
+    });
+
+  }catch(err){
+    console.error(err);
+    titleEl.innerText = 'Gagal memuat surah — cek koneksi';
+    ayatList.innerHTML = `<div style="padding:12px;color:var(--muted)">Terjadi kesalahan: ${err.message}</div>`;
+  }
+}
+
+function escapeAudioUrl(url){
+  if(!url) return '';
+  return encodeURIComponent(url);
+}
+
+function unescapeAudioUrl(enc){
+  if(!enc) return '';
+  return decodeURIComponent(enc);
+}
+
+function playAudioUrl(encUrl){
+  const url = unescapeAudioUrl(encUrl);
+  if(!url){
+    alert('Audio tidak tersedia untuk ayat ini.');
+    return;
+  }
+  const a = new Audio(url);
+  a.play().catch(err=>{ console.error(err); alert('Gagal memutar audio.'); });
+}
+
+// bookmarks
+function bookmarkAyat(surahNumber, inSurahNumber, globalNumber){
+  const key = 'quran_bookmarks_v1';
+  const list = JSON.parse(localStorage.getItem(key) || '[]');
+  const exists = list.find(x => x.surah === surahNumber && x.ayah === inSurahNumber);
+  if(exists){
+    alert('Ayat sudah disimpan.');
+    return;
+  }
+  list.push({surah:surahNumber, ayah:inSurahNumber, global:globalNumber, savedAt:Date.now()});
+  localStorage.setItem(key, JSON.stringify(list));
+  alert('Ayat disimpan pada bookmark.');
+  showBookmarks();
+}
+
+async function showBookmarks(){
+  const key = 'quran_bookmarks_v1';
+  const list = JSON.parse(localStorage.getItem(key) || '[]');
+  const container = document.getElementById('bookmarkList');
+  container.innerHTML = '';
+  if(list.length === 0){
+    container.innerHTML = '<li>Tidak ada bookmark</li>';
+    return;
+  }
+
+  // tampilkan judul setiap item (ambil dari API ayah)
+  for(const b of list){
+    try{
+      const res = await fetch(`${API_BASE}/verse/${b.global}`);
+      const j = await res.json();
+      const text = j && j.data && j.data.text && (j.data.text.arab || j.data.text) ? (j.data.text.arab || j.data.text) : '';
+      const small = document.createElement('li');
+      small.innerHTML = `<strong>Surah ${j.data.surah.name.transliteration.id} (${b.surah}:${b.ayah})</strong><div style="font-size:14px;margin-top:6px">${truncate(text,120)}</div>
+        <div style="margin-top:6px"><button class="small-btn" onclick="loadSurah(${b.surah})">Buka</button>
+        <button style="background:#6c757d" class="small-btn" onclick="removeBookmark(${b.surah},${b.ayah})">Hapus</button></div>`;
+      container.appendChild(small);
+    }catch(e){
+      console.error(e);
+    }
+  }
+}
+
+function truncate(s,n){ if(!s) return ''; return s.length>n? s.slice(0,n)+'...': s; }
+
+function removeBookmark(s, a){
+  const key = 'quran_bookmarks_v1';
+  let list = JSON.parse(localStorage.getItem(key) || '[]');
+  list = list.filter(x => !(x.surah===s && x.ayah===a));
+  localStorage.setItem(key, JSON.stringify(list));
+  showBookmarks();
+}
+
+// search (using quran.sutanlab.id search)
+async function searchKeyword(){
+  const q = document.getElementById('searchInput').value.trim();
+  if(!q){ alert('Masukkan kata kunci pencarian.'); return; }
+  const container = document.getElementById('ayat-list');
+  container.innerHTML = `<div style="padding:12px;color:var(--muted)">Mencari kata "${escapeHtml(q)}"...</div>`;
+
+  try{
+    // using quran.sutanlab.id search endpoint
+    const res = await fetch(`${API_BASE}/search?query=${encodeURIComponent(q)}&size=30`);
+    const json = await res.json();
+    if(!json || !json.data || json.data.length===0){
+      container.innerHTML = `<div style="padding:12px;color:var(--muted)">Tidak ditemukan hasil untuk "${escapeHtml(q)}".</div>`;
+      return;
+    }
+    container.innerHTML = '';
+    json.data.forEach(item => {
+      const d = document.createElement('div');
+      d.className = 'ayat';
+      const arab = item.text && item.text.arab ? item.text.arab : '';
+      const trans = item.text && item.text.hits && item.text.hits.id ? item.text.hits.id : (item.translation ? item.translation.id : '');
+      d.innerHTML = `
+        <p class="arabic">${arab}</p>
+        <p class="trans">${trans || '<span style="color:#d33">[Terjemahan tidak tersedia]</span>'}</p>
+        <div class="meta-line">Surah ${item.surah.name.transliteration.id} — Ayat ${item.verse.number.inSurah}</div>
+        <div class="actions">
+          <button class="small-btn" onclick="playAudioUrl('${escapeAudioUrl(item.audio && item.audio.primary || '')}')">🔊 Putar Audio</button>
+          <button class="small-btn" onclick="bookmarkAyat(${item.surah.number}, ${item.verse.number.inSurah}, ${item.verse.number.global})">⭐ Simpan Ayat</button>
+        </div>
+      `;
+      container.appendChild(d);
+    });
+
+  }catch(err){
+    console.error(err);
+    container.innerHTML = `<div style="padding:12px;color:var(--muted)">Terjadi kesalahan saat mencari.</div>`;
+  }
+}
+
+function escapeHtml(s){ if(!s) return ''; return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+</script>
 </body>
-  <body>
-  <header>
-    <h1>Baca Al-Qur’an Online</h1>
-    <select id="surahSelect" onchange="loadSurah(this.value)"></select>
-    <button onclick="toggleDarkMode()">🌙 Mode Gelap</button>
-  </header>
-
-  <main>
-    <h2 id="surah-title"></h2>
-    <div id="ayat-list"></div>
-  </main>
-
-  <footer>© Al-Qur’an Web by Singgih Perkasa</footer>
-
-  <script src="script.js"></script>
-  </body>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet">
-
-<style>
-body {
-  font-family: 'Amiri', serif;
-}
-p {
-  font-size: 20px;
-  line-height: 1.8;
-}
-</style>
-  
 </html>
