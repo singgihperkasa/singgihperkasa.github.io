@@ -1,1 +1,39 @@
-
+<!DOCTYPE html>
+<html lang="id">
+<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Qur'an Digital — SuamiKuat</title>
+<link rel="stylesheet" href="../assets/style.css"></head>
+<body>
+<div class="container">
+  <a href="../index.html">⬅️ Kembali</a>
+  <h2>📖 Al-Qur'an (Contoh)</h2>
+  <ul id="surahList" class="surah-list"></ul>
+  <div id="surahView"></div>
+</div>
+<script>
+  async function loadQuran(){
+    const res = await fetch('quran.json');
+    const data = await res.json();
+    const ul = document.getElementById('surahList');
+    data.forEach(s => {
+      const li = document.createElement('li');
+      li.innerHTML = `<a href="#" onclick="viewSurah(${s.nomor});return false;">${s.nomor}. ${s.nama_latin} — ${s.arti}</a>`;
+      ul.appendChild(li);
+    });
+    window.quranData = data;
+  }
+  function viewSurah(id){
+    const s = window.quranData.find(x=>x.nomor===id);
+    const view = document.getElementById('surahView');
+    view.innerHTML = `<h3>${s.nama_latin} — ${s.arti}</h3>`;
+    s.ayat.forEach(a=>{
+      const d = document.createElement('div'); d.className='ayat';
+      d.innerHTML = `<div class="arab">${a.ar}</div><div class="trans">${a.idn}</div>
+                     <audio controls preload="none" src="../assets/audio/${a.audio||'multa_placeholder.mp3'}"></audio>`;
+      view.appendChild(d);
+    });
+  }
+  loadQuran();
+</script>
+</body>
+</html>
