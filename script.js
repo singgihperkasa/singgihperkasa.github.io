@@ -9,6 +9,25 @@ ayatDiv.innerHTML = `
   <button onclick="playAudio(${ayah.number})">🔊 Putar Audio</button>
   <button onclick="bookmarkAyat(${ayah.number})">⭐ Simpan Ayat</button>
 `;
+fetch(`https://api.quran.sutanlab.id/surah/${surahNumber}`)
+  .then(res => res.json())
+  .then(data => {
+    const ayatList = document.getElementById("ayat-list");
+    ayatList.innerHTML = "";
+
+    data.data.verses.forEach(ayah => {
+      const ayatDiv = document.createElement("div");
+      ayatDiv.classList.add("ayat");
+
+      ayatDiv.innerHTML = `
+        <p class="arabic">${ayah.text.arab}</p>
+        <p><em>Terjemahan:</em> ${ayah.translation.id}</p>
+        <button onclick="playAudio('${ayah.audio.primary}')">🔊 Putar Audio</button>
+      `;
+
+      ayatList.appendChild(ayatDiv);
+    });
+  });
 
 function toggleDarkMode() {
   document.body.classList.toggle("dark");
