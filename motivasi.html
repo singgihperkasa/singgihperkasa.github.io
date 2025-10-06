@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="id">
+<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Motivasi Ayah — SuamiKuat</title>
+<link rel="stylesheet" href="assets/style.css"></head>
+<body>
+<div class="container">
+  <a href="index.html">⬅️ Kembali</a>
+  <h2>💌 Motivasi Ayah</h2>
+  <div id="box" class="ayat"></div>
+  <button onclick="newQuote()" class="card" style="display:inline-block;margin-top:12px">Dapatkan Motivasi Baru</button>
+  <script>
+    const quotes = [
+      "Sesungguhnya setelah kesulitan ada kemudahan. — QS Al-Insyirah:6",
+      "Bekerjalah dengan niat mencari ridha Allah; rezeki akan datang tak terduga.",
+      "Jangan remehkan keringatmu; setiap tetes bisa jadi pahala.",
+      "Keluarga adalah amanah. Jaga, beri contoh, dan doa setiap hari."
+    ];
+    function newQuote(){ document.getElementById('box').innerText = quotes[Math.floor(Math.random()*quotes.length)]; }
+    newQuote();
+  </script>
+  <a href="index.html">⬅️ Kembali</a>
+</div>
+</body>
+</html>
