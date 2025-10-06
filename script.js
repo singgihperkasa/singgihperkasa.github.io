@@ -3,6 +3,12 @@ document.addEventListener("DOMContentLoaded", () => {
   loadSurah(1);
   showBookmarks();
 });
+ayatDiv.innerHTML = `
+  <p class="arabic">${ayah.text}</p>
+  <p><em>Terjemahan:</em> ${ayah.translation}</p>
+  <button onclick="playAudio(${ayah.number})">🔊 Putar Audio</button>
+  <button onclick="bookmarkAyat(${ayah.number})">⭐ Simpan Ayat</button>
+`;
 
 function toggleDarkMode() {
   document.body.classList.toggle("dark");
