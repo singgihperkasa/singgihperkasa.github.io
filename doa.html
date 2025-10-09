@@ -1,26 +1,70 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Dzikir & Doa — SuamiKuat</title>
-<link rel="stylesheet" href="assets/style.css"></head>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Qur'an Audio Player — singgihperkasa.github.io</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 30px;
+      background: #f4f4f4;
+    }
+    select, audio {
+      margin-top: 20px;
+      width: 80%;
+      max-width: 400px;
+    }
+  </style>
+</head>
 <body>
-<div class="container">
-  <a href="index.html">⬅️ Kembali</a>
-  <h2>📿 Dzikir & Doa Harian</h2>
-  <div class="ayat">
-    <div class="arab">اللَّهُمَّ إِنِّي أَسْأَلُكَ رِزْقًا طَيِّبًا</div>
-    <div class="trans">"Ya Allah, aku memohon rezeki yang baik (halal dan berkah)."</div>
-    <audio controls preload="none" src="assets/audio/dzikirpagi.mp3"></audio>
+  <h1>🎧 Pemutar Surah Al-Qur'an</h1>
+  <p>Pilih surah untuk mendengarkan bacaan:</p>
+
+  <select id="chapterSelect">
+    <option value="">-- Memuat daftar surah... --</option>
+  </select>
+
+  <div id="audioContainer" style="display:none;">
+    <h3 id="chapterName"></h3>
+    <audio id="audioPlayer" controls></audio>
   </div>
 
-  <div class="ayat">
-    <h3>Dzikir Ringkas Saat Lelah</h3>
-    <div class="arab">سُبْحَانَ اللهِ وَبِحَمْدِهِ</div>
-    <div class="trans">"Maha Suci Allah dan segala puji bagi-Nya."</div>
-    <audio controls preload="none" src="assets/audio/relaksasi1.mp3"></audio>
-  </div>
+  <script>
+    const apiBase = "https://api.quran.foundation/v4";
 
-  <a href="index.html">⬅️ Kembali</a>
-</div>
+    // 1️⃣ Ambil daftar surah
+    fetch(`${apiBase}/chapters`)
+      .then(r => r.json())
+      .then(data => {
+        const select = document.getElementById("chapterSelect");
+        select.innerHTML = '<option value="">-- Pilih surah --</option>';
+        data.chapters.forEach(chap => {
+          const opt = document.createElement("option");
+          opt.value = chap.id;
+          opt.textContent = `${chap.id}. ${chap.name_simple} (${chap.translated_name.name})`;
+          select.appendChild(opt);
+        });
+      });
+
+    // 2️⃣ Saat user memilih surah → ambil audio
+    document.getElementById("chapterSelect").addEventListener("change", async e => {
+      const id = e.target.value;
+      if (!id) return;
+      const reciterId = 1; // Qari default (Alafasy). Bisa diganti.
+      const res = await fetch(`${apiBase}/chapter_reciter_audio_file/${reciterId}/${id}`);
+      const data = await res.json();
+
+      if (data.audio_file && data.audio_file.audio_url) {
+        document.getElementById("audioContainer").style.display = "block";
+        document.getElementById("chapterName").textContent = 
+          `Surah ${id} — ${data.audio_file.chapter_name || ""}`;
+        document.getElementById("audioPlayer").src = data.audio_file.audio_url;
+      } else {
+        alert("Audio tidak ditemukan untuk surah ini.");
+      }
+    });
+  </script>
 </body>
 </html>
