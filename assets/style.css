@@ -1,24 +1,88 @@
-/* Modern, legible style suitable for mobile */
-:root{
-  --bg:#f7f9fb; --card:#ffffff; --accent:#0f766e; --muted:#6b7280;
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f8fff8;
+  color: #222;
+  margin: 0;
+  padding: 0;
+  text-align: center;
 }
-*{box-sizing:border-box}
-body{font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Noto Sans',sans-serif;
-     margin:0;background:var(--bg);color:#0f172a;line-height:1.45}
-.hero{background:linear-gradient(135deg,var(--accent),#065f46);color:white;padding:34px 16px;text-align:center}
-.hero h1{margin:0;font-size:28px;letter-spacing:0.6px}
-.hero p{margin:6px 0 0;color:rgba(255,255,255,0.9)}
-.container{max-width:900px;margin:20px auto;padding:0 16px}
-.menu{display:grid;grid-template-columns:repeat(1,1fr);gap:12px}
-.card{display:block;padding:18px;border-radius:12px;background:var(--card);text-decoration:none;color:var(--accent);
-      box-shadow:0 6px 20px rgba(15,118,110,0.07);font-weight:600;font-size:16px;text-align:left}
-.card:hover{transform:translateY(-3px);transition:all .18s ease}
-.footer{text-align:center;padding:20px;color:var(--muted);font-size:13px}
-/* Qur'an view */
-.surah-list{list-style:none;padding:0;margin:0}
-.surah-list li{padding:10px;border-bottom:1px solid #eef2f7}
-.ayat{margin:18px 0;padding:12px;border-radius:10px;background:#fff;box-shadow:0 4px 14px rgba(2,6,23,0.03)}
-.arab{font-size:26px;direction:rtl;text-align:right;font-family:'Amiri',serif;margin-bottom:8px}
-.trans{font-size:15px;color:var(--muted);text-align:left}
-/* small screens adjust */
-@media(min-width:640px){.menu{grid-template-columns:repeat(2,1fr)}}
+
+header {
+  background: linear-gradient(to bottom, #2e7d32, #66bb6a);
+  color: white;
+  padding: 40px 10px;
+  border-bottom-left-radius: 50px;
+  border-bottom-right-radius: 50px;
+}
+
+h1 {
+  font-size: 2.5em;
+  margin: 0;
+}
+
+h2 {
+  font-weight: 400;
+  margin: 10px 0 20px 0;
+}
+
+.syukur {
+  font-size: 1em;
+  line-height: 1.8em;
+  margin: 0 auto;
+  max-width: 600px;
+}
+
+.ayat {
+  padding: 30px 15px;
+}
+
+.quran h3 {
+  color: #2e7d32;
+  margin-top: 20px;
+}
+
+.arabic {
+  font-size: 1.4em;
+  direction: rtl;
+  text-align: center;
+  margin: 10px 0;
+  font-family: 'Scheherazade', serif;
+}
+
+.arti {
+  font-style: italic;
+  margin-bottom: 20px;
+}
+
+.galeri {
+  background-color: #e8f5e9;
+  padding: 40px 10px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  padding: 20px;
+}
+
+.grid img {
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  transition: transform 0.3s;
+}
+
+.grid img:hover {
+  transform: scale(1.05);
+}
+
+footer {
+  background-color: #2e7d32;
+  color: white;
+  padding: 20px;
+  margin-top: 20px;
+  font-size: 0.9em;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
