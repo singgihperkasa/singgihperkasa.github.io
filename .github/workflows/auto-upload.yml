@@ -1,4 +1,4 @@
-name: Auto Upload + Optimize Foto
+name: Auto Upload + Optimize + Thumbnail
 
 on:
   push:
@@ -6,25 +6,25 @@ on:
       - main
   schedule:
     - cron: "*/30 * * * *" # Jalan tiap 30 menit
-  workflow_dispatch: # Bisa dijalankan manual lewat GitHub
+  workflow_dispatch: # Bisa dijalankan manual lewat tombol "Run workflow"
 
 jobs:
   auto-upload:
-    name: Auto Commit & Optimize
+    name: Optimize dan Buat Thumbnail
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Ambil isi repository
+      # 1️⃣ Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2️⃣ Install alat kompres gambar
-      - name: Install image optimization tools
+      # 2️⃣ Install alat optimasi & konversi gambar
+      - name: Install image tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y jpegoptim optipng
+          sudo apt-get install -y jpegoptim optipng imagemagick
 
-      # 3️⃣ Kompres semua gambar JPG & PNG di folder assets/foto
+      # 3️⃣ Kompres gambar di assets/foto/
       - name: Optimize images
         run: |
           find assets/foto -type f -iname '*.jpg' -exec jpegoptim --max=85 {} \;
@@ -32,27 +32,33 @@ jobs:
           find assets/foto -type f -iname '*.png' -exec optipng -o2 {} \;
         continue-on-error: true
 
-      # 4️⃣ Setup Git
+      # 4️⃣ Buat thumbnail (lebar 300px) ke folder assets/foto/thumb/
+      - name: Generate thumbnails
+        run: |
+          mkdir -p assets/foto/thumb
+          for img in $(find assets/foto -maxdepth 1 -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' \)); do
+            name=$(basename "$img")
+            convert "$img" -resize 300x300\> "assets/foto/thumb/$name"
+          done
+        continue-on-error: true
+
+      # 5️⃣ Setup Git
       - name: Setup Git
         run: |
           git config --global user.name "GitHub Action"
           git config --global user.email "actions@github.com"
 
-      # 5️⃣ Commit hasil kompresi + update file lain
-      - name: Commit changes
+      # 6️⃣ Commit hasil kompresi & thumbnail
+      - name: Commit and Push changes
         run: |
           git add .
           timestamp=$(date +"%Y-%m-%d %H:%M:%S")
-          git commit -m "🖼️ Auto optimize & update at $timestamp" || echo "No changes to commit"
-
-      # 6️⃣ Push ke branch main
-      - name: Push to main
-        run: |
+          git commit -m "🖼️ Auto optimize & generate thumbnails at $timestamp" || echo "No changes to commit"
           git push origin main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # 7️⃣ (Opsional) Rebuild GitHub Pages
+      # 7️⃣ Rebuild GitHub Pages
       - name: Trigger Pages rebuild
         uses: actions/upload-pages-artifact@v3
         with:
