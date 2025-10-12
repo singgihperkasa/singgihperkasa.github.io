@@ -1,28 +1,59 @@
-name: Auto Upload ke GitHub Pages
+name: Auto Upload + Optimize Foto
 
 on:
   push:
-    paths:
-      - "assets/foto/**"   # kalau kamu upload foto di folder ini
+    branches:
+      - main
   schedule:
-    - cron: "*/30 * * * *" # setiap 30 menit cek perubahan
+    - cron: "*/30 * * * *" # Jalan tiap 30 menit
+  workflow_dispatch: # Bisa dijalankan manual lewat GitHub
 
 jobs:
-  auto-commit:
+  auto-upload:
+    name: Auto Commit & Optimize
     runs-on: ubuntu-latest
+
     steps:
+      # 1️⃣ Ambil isi repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # 2️⃣ Install alat kompres gambar
+      - name: Install image optimization tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jpegoptim optipng
+
+      # 3️⃣ Kompres semua gambar JPG & PNG di folder assets/foto
+      - name: Optimize images
+        run: |
+          find assets/foto -type f -iname '*.jpg' -exec jpegoptim --max=85 {} \;
+          find assets/foto -type f -iname '*.jpeg' -exec jpegoptim --max=85 {} \;
+          find assets/foto -type f -iname '*.png' -exec optipng -o2 {} \;
+        continue-on-error: true
+
+      # 4️⃣ Setup Git
       - name: Setup Git
         run: |
           git config --global user.name "GitHub Action"
           git config --global user.email "actions@github.com"
 
-      - name: Commit dan Push Perubahan
+      # 5️⃣ Commit hasil kompresi + update file lain
+      - name: Commit changes
         run: |
           git add .
-          git commit -m "Auto commit: update foto $(date)"
-          git push
-        continue-on-error: true
+          timestamp=$(date +"%Y-%m-%d %H:%M:%S")
+          git commit -m "🖼️ Auto optimize & update at $timestamp" || echo "No changes to commit"
 
+      # 6️⃣ Push ke branch main
+      - name: Push to main
+        run: |
+          git push origin main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # 7️⃣ (Opsional) Rebuild GitHub Pages
+      - name: Trigger Pages rebuild
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
