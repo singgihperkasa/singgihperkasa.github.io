@@ -1,18 +1,15 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Galeri Akad Nikah — Singgih Perkasa & Nur Samsiyah</title>
   <link rel="stylesheet" href="assets/style.css">
-  <style>
-    .loading { color:#388e3c; margin-top:1rem; font-style:italic; }
-  </style>
 </head>
 <body>
-  <header>
+  <header class="site-header">
     <h1>Galeri Akad Nikah</h1>
-    <h2>Singgih Perkasa & Nur Samsiyah</h2>
+    <h2>Singgih Perkasa &amp; Nur Samsiyah</h2>
     <p class="syukur">
       <strong>Alhamdulillāh</strong><br>
       Dengan ridha Allah SWT, telah terlaksana akad nikah kami dalam suasana penuh berkah — sakinah, mawaddah, dan rahmah.<br>
@@ -20,88 +17,124 @@
     </p>
   </header>
 
-  <section class="ayat">
-    <div class="quran">
-      <h3>QS. Ar-Rum 21</h3>
-      <p class="arabic">وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُمْ مِنْ أَنْفُسِكُمْ أَزْوَاجًا لِتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُمْ مَوَدَّةً وَرَحْمَةً ۚ إِنَّ فِي ذَٰلِكَ لَآيَاتٍ لِقَوْمٍ يَتَفَكَّرُونَ</p>
-      <p class="arti">“Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang.”</p>
+  <main>
+    <section class="ayat">
+      <div class="quran">
+        <h3>QS. Ar-Rum 21</h3>
+        <p class="arabic">وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُمْ مِنْ أَنْفُسِكُمْ أَزْوَاجًا لِتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُمْ مَوَدَّةً وَرَحْمَةً ۚ إِنَّ فِي ذَٰلِكَ لَآيَاتٍ لِقَوْمٍ يَتَفَكَّرُونَ</p>
+        <p class="arti">“Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang.”</p>
 
-      <h3>QS. An-Nisa 19</h3>
-      <p class="arabic">وَعَاشِرُوهُنَّ بِالْمَعْرُوفِ</p>
-      <p class="arti">“Dan bergaullah dengan mereka (para istri) dengan cara yang baik.”</p>
-    </div>
-  </section>
+        <h3>QS. An-Nisa 19</h3>
+        <p class="arabic">وَعَاشِرُوهُنَّ بِالْمَعْرُوفِ</p>
+        <p class="arti">“Dan bergaullah dengan mereka (para istri) dengan cara yang baik.”</p>
+      </div>
+    </section>
 
-  <section class="galeri">
-    <h3>Kenangan Akad</h3>
-    <div id="gallery" class="grid"></div>
-    <p class="loading" id="loading">Menampilkan foto dari folder...</p>
-    
-    
-  </section>
-  
-<section class="galeri video">
-    <h3>video Akad</h3>
-    <div id="gallery video" class="grid"></div>
+    <section class="galeri">
+      <h3>Kenangan Akad</h3>
+      <p id="photo-loading" class="hint">Menampilkan foto dari folder...</p>
+      <div id="gallery" class="grid"></div>
+    </section>
 
-    <iframe 
-  src="https://drive.google.com/file/d/1n4M5cO2pFw_ZY_VL8e4Hu5uOsBPD4AGg/preview" 
-  width="360" height="240" allow="autoplay">
-    </iframe>
-    
-</section>
-  <footer>
-    © 2025 Singgih Perkasa & Nur Samsiyah — Alhamdulillāh atas pernikahan kami
+    <section class="video-section">
+      <h3>Video Akad</h3>
+      <p id="video-loading" class="hint">Memuat video...</p>
+      <div id="videos" class="video-grid"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    © 2025 Singgih Perkasa &amp; Nur Samsiyah — Alhamdulillāh atas pernikahan kami
   </footer>
 
   <script>
-  <script>
-async function loadPhotos() {
-  const gallery = document.getElementById('gallery');
-  const loading = document.getElementById('loading');
+  // Load photos from GitHub repository folder listing (requires repo public)
+  async function loadPhotos() {
+    const gallery = document.getElementById('gallery');
+    const loading = document.getElementById('photo-loading');
 
-  try {
-    const response = await fetch('https://api.github.com/repos/singgihperkasa/singgihperkasa.github.io/contents/assets/foto');
-    const files = await response.json();
+    try {
+      const apiUrl = 'https://api.github.com/repos/singgihperkasa/singgihperkasa.github.io/contents/assets/foto';
+      const res = await fetch(apiUrl);
+      if (!res.ok) throw new Error('API error');
+      const files = await res.json();
 
-    gallery.innerHTML = '';
-    let found = false;
+      gallery.innerHTML = '';
+      let found = false;
 
-    files.forEach(file => {
-      const name = file.name.toLowerCase();
+      files.forEach(file => {
+        const name = file.name.toLowerCase();
+        if (name.match(/\.(jpg|jpeg|png|gif)$/i)) {
+          const wrap = document.createElement('div');
+          wrap.className = 'grid-item';
+          const img = document.createElement('img');
+          img.src = 'assets/foto/' + file.name;
+          img.alt = file.name;
+          wrap.appendChild(img);
+          gallery.appendChild(wrap);
+          found = true;
+        }
+      });
 
-      if (name.match(/\.(jpg|jpeg|png|gif)$/i)) {
-        const img = document.createElement('img');
-        img.src = 'assets/foto/' + file.name;
-        img.alt = file.name;
-        gallery.appendChild(img);
-        found = true;
+      if (!found) {
+        loading.textContent = 'Belum ada foto diunggah ke folder assets/foto/.';
+      } else {
+        loading.remove();
       }
 
-      if (name.match(/\.(mp4|webm|mov)$/i)) {
-        const vid = document.createElement('video');
-        vid.src = 'assets/foto/' + file.name;
-        vid.controls = true;
-        vid.width = 300;
-        vid.style.borderRadius = '12px';
-        gallery.appendChild(vid);
-        found = true;
-      }
-    });
-
-    if (!found) {
-      loading.textContent = 'Belum ada foto/video diunggah ke folder assets/foto/';
-    } else {
-      loading.remove();
+    } catch (err) {
+      loading.textContent = 'Gagal memuat foto. Pastikan repositori public dan folder assets/foto/ ada.';
+      console.error(err);
     }
-
-  } catch (err) {
-    loading.textContent = 'Gagal memuat file. Pastikan repositori publik.';
   }
-}
 
-loadPhotos();
+  // Load videos from local JSON (video_list.json) and embed Google Drive preview if provided
+  async function loadVideos() {
+    const container = document.getElementById('videos');
+    const loading = document.getElementById('video-loading');
 
+    try {
+      const res = await fetch('assets/video_list.json');
+      if (!res.ok) throw new Error('video list not found');
+      const list = await res.json();
+
+      container.innerHTML = '';
+      let found = false;
+
+      list.forEach(item => {
+        if (item && item.id) {
+          const wrap = document.createElement('div');
+          wrap.className = 'video-card';
+          const title = document.createElement('div');
+          title.className = 'video-title';
+          title.textContent = item.judul || item.id;
+          const iframe = document.createElement('iframe');
+          iframe.src = 'https://drive.google.com/file/d/' + item.id + '/preview';
+          iframe.width = '560';
+          iframe.height = '315';
+          iframe.allow = 'autoplay; encrypted-media';
+          iframe.allowFullscreen = true;
+          wrap.appendChild(title);
+          wrap.appendChild(iframe);
+          container.appendChild(wrap);
+          found = true;
+        }
+      });
+
+      if (!found) {
+        loading.textContent = 'Belum ada video di assets/video_list.json.';
+      } else {
+        loading.remove();
+      }
+    } catch (err) {
+      loading.textContent = 'Gagal memuat daftar video.';
+      console.error(err);
+    }
+  }
+
+  // Run both loaders independently
+  loadPhotos();
+  loadVideos();
   </script>
 </body>
 </html>
