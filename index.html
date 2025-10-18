@@ -16,7 +16,15 @@
       Semoga Allah meneguhkan cinta ini dalam ketaatan dan keberkahan sepanjang masa.
     </p>
   </header>
-
+  <!-- 🎵 Pemutar musik (otomatis jalan setelah klik pertama) -->
+  <audio id="music" src="assets/audio/akad.mp3" preload="auto" loop></audio>
+  <script>
+    document.addEventListener('click', function playOnce() {
+      const music = document.getElementById('music');
+      music.play().catch(err => console.log('Autoplay diblokir:', err));
+      document.removeEventListener('click', playOnce);
+    });
+  </script>
   <main>
     <section class="ayat">
       <div class="quran">
